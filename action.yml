@@ -1,5 +1,5 @@
-name: 'pr-size-labeler'
-description: 'Label a PR using its size'
+name: 'Pull Request size labeler'
+description: 'Label a PR based on the amount of changes'
 inputs:
   GITHUB_TOKEN:
     description: 'GitHub token'
