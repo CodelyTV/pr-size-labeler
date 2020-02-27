@@ -1,0 +1,11 @@
+name: 'pr-size-labeler'
+description: 'Label a PR using its size'
+inputs:
+  GITHUB_TOKEN:
+    description: 'GitHub token'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.GITHUB_TOKEN }}
