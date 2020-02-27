@@ -13,6 +13,11 @@ fi
 
 GITHUB_TOKEN="$1"
 
+xs_max_size="$2"
+s_max_size="$3"
+m_max_size="$4"
+l_max_size="$5"
+
 URI="https://api.github.com"
 API_HEADER="Accept: application/vnd.github.v3+json"
 AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
@@ -44,13 +49,13 @@ autolabel() {
 }
 
 label_for() {
-  if [ "$1" -lt 10 ]; then
+  if [ "$1" -lt "$xs_max_size" ]; then
     label="size/xs"
-  elif [ "$1" -lt 100 ]; then
+  elif [ "$1" -lt "$s_max_size" ]; then
     label="size/s"
-  elif [ "$1" -lt 500 ]; then
+  elif [ "$1" -lt "$m_max_size" ]; then
     label="size/m"
-  elif [ "$1" -lt 1000 ]; then
+  elif [ "$1" -lt "$l_max_size" ]; then
     label="size/l"
   else
     label="size/xl"

@@ -4,8 +4,28 @@ inputs:
   GITHUB_TOKEN:
     description: 'GitHub token'
     required: true
+  xs_max_size:
+    description: 'Max size for a PR to be considered xs'
+    required: false
+    default: '10'
+  s_max_size:
+    description: 'Max size for a PR to be considered s'
+    required: false
+    default: '100'
+  m_max_size:
+    description: 'Max size for a PR to be considered m'
+    required: false
+    default: '500'
+  l_max_size:
+    description: 'Max size for a PR to be considered l'
+    required: false
+    default: '1000'
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
     - ${{ inputs.GITHUB_TOKEN }}
+    - ${{ inputs.xs_max_size }}
+    - ${{ inputs.s_max_size }}
+    - ${{ inputs.m_max_size }}
+    - ${{ inputs.l_max_size }}
