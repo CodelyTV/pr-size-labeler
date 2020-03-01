@@ -19,7 +19,7 @@
 
 ## 🚀 Usage
 
-Create a file named `labeler.yml` inside the `.gihub/workflows` directory and paste:
+Create a file named `labeler.yml` inside the `.github/workflows` directory and paste:
 
 ```yml
 name: labeler
