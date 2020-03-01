@@ -34,3 +34,6 @@ runs:
     - ${{ inputs.m_max_size }}
     - ${{ inputs.l_max_size }}
     - ${{ inputs.fail_if_xl }}
+branding:
+  icon: 'tag'  
+  color: 'green'
