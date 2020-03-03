@@ -6,7 +6,7 @@ labeler::label() {
   local -r pr_number=$(github_actions::get_pr_number)
   local -r total_modifications=$(github::calculate_total_modifications "$pr_number")
 
-  log::message "total modifications: $total_modifications"
+  log::message "Total modifications: $total_modifications"
 
   local -r label_to_add=$(labeler::label_for "$total_modifications" "$@")
 

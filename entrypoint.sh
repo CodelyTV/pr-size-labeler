@@ -9,6 +9,8 @@ fi
 
 export PR_SIZE_LABELER_HOME
 
+bash --version
+
 source "$PR_SIZE_LABELER_HOME/src/main.sh"
 
 main "$@"
