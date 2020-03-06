@@ -8,7 +8,7 @@ ensure::env_variable_exist() {
 }
 
 ensure::total_args() {
-  local -r received_args=$(echo "$# - 1" | bc)
+  local -r received_args=$(( $# - 1 ))
   local -r expected_args=$1
 
   if ((received_args != expected_args)); then
