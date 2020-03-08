@@ -9,7 +9,7 @@ github::calculate_total_modifications() {
   local -r additions=$(echo "$body" | jq '.additions')
   local -r deletions=$(echo "$body" | jq '.deletions')
 
-  echo "$additions + $deletions" | bc
+  echo $(( additions + deletions ))
 }
 
 github::add_label_to_pr() {
