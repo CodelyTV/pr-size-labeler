@@ -10,9 +10,9 @@ jobs:
       - uses: codelytv/pr-size-labeler@message
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          xs_max_size: '10'
-          s_max_size: '50'
-          m_max_size: '200'
-          l_max_size: '450'
+          xs_max_size: '1'
+          s_max_size: '2'
+          m_max_size: '3'
+          l_max_size: '4'
           fail_if_xl: 'true'
           message_if_xl: 'This PR is sooooo big!! 😳'
