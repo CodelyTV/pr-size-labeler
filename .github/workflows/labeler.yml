@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Label the PR size
     steps:
-      - uses: codelytv/pr-size-labeler@v1
+      - uses: codelytv/pr-size-labeler@message
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           xs_max_size: '10'
@@ -15,3 +15,4 @@ jobs:
           m_max_size: '200'
           l_max_size: '450'
           fail_if_xl: 'true'
+          message_if_xl: 'This PR is sooooo big!! 😳'

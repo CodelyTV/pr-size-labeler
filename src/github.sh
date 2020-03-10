@@ -9,7 +9,7 @@ github::calculate_total_modifications() {
   local -r additions=$(echo "$body" | jq '.additions')
   local -r deletions=$(echo "$body" | jq '.deletions')
 
-  echo $(( additions + deletions ))
+  echo $((additions + deletions))
 }
 
 github::add_label_to_pr() {
@@ -38,4 +38,16 @@ github::format_labels() {
   readarray -t splitted_quoted_labels <<<"$quoted_labels"
 
   coll::join_by "," "${splitted_quoted_labels[@]/#/}"
+}
+
+github::comment() {
+  local -r comment=$1
+
+  curl -sSL \
+    -H "Authorization: token $GITHUB_TOKEN" \
+    -H "$GITHUB_API_HEADER" \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d "{\"body\":\"$comment\"}" \
+    "$GITHUB_API_URI/repos/$GITHUB_REPOSITORY/issues/$pr_number/comments"
 }
