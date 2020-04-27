@@ -34,10 +34,13 @@ github::add_label_to_pr() {
 }
 
 github::format_labels() {
-  local -r quoted_labels=$(echo "$@" | coll::map str::quote)
-  readarray -t splitted_quoted_labels <<<"$quoted_labels"
+  quoted_labels=()
+  for i in "${@}"; do
+    :
+    quoted_labels+=("$(str::quote "$i")")
+  done
 
-  coll::join_by "," "${splitted_quoted_labels[@]/#/}"
+  coll::join_by "," "${quoted_labels[@]/#/}"
 }
 
 github::comment() {
