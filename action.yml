@@ -25,7 +25,7 @@ inputs:
     required: false
     default: 'false'
   message_if_xl:
-    description: 'Message to show in the PR is xl size'
+    description: 'Message to show if the PR is xl size'
     required: false
     default: ''
 runs:
