@@ -2,6 +2,7 @@
 
 labeler::label() {
   local -r fail_if_xl="$5"
+  local -r message_if_xl="$6"
 
   local -r pr_number=$(github_actions::get_pr_number)
   local -r total_modifications=$(github::calculate_total_modifications "$pr_number")
@@ -14,9 +15,15 @@ labeler::label() {
 
   github::add_label_to_pr "$pr_number" "$label_to_add"
 
-  if [ "$label_to_add" == "size/xl" ] && [ "$fail_if_xl" == "true" ]; then
-    echoerr "Pr is xl, please, short this!!"
-    exit 1
+  if [ "$label_to_add" == "size/xl" ]; then
+    if [ -n "$message_if_xl" ]; then
+      github::comment "$message_if_xl"
+    fi
+
+    if [ "$fail_if_xl" == "true" ]; then
+      echoerr "Pr is xl, please, short this!!"
+      exit 1
+    fi
   fi
 }
 

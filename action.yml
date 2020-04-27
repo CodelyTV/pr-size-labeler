@@ -24,6 +24,10 @@ inputs:
     description: 'Fail if the PR is of xl size'
     required: false
     default: 'false'
+  message_if_xl:
+    description: 'Message to show if the PR is xl size'
+    required: false
+    default: ''
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -34,6 +38,7 @@ runs:
     - ${{ inputs.m_max_size }}
     - ${{ inputs.l_max_size }}
     - ${{ inputs.fail_if_xl }}
+    - ${{ inputs.message_if_xl }}
 branding:
-  icon: 'tag'  
+  icon: 'tag'
   color: 'green'
