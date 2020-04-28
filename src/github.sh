@@ -35,9 +35,10 @@ github::add_label_to_pr() {
 
 github::format_labels() {
   quoted_labels=()
-  for i in "${@}"; do
-    :
-    quoted_labels+=("$(str::quote "$i")")
+  for label in "${@}"; do
+    if [ -n "$label" ]; then
+      quoted_labels+=("$(str::quote "$label")")
+    fi
   done
 
   coll::join_by "," "${quoted_labels[@]/#/}"
