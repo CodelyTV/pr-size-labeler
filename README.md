@@ -40,7 +40,7 @@ jobs:
           m_max_size: '500'
           l_max_size: '1000'
           fail_if_xl: 'false'
-          message_if_xl: 'This PR is sooooo big!! 😳'
+          message_if_xl: 'This PR is sooooo big! Please, split it 😊'
 ```
 
 > If you want, you can customize all `*_max_size` with the size that fits in your project.
