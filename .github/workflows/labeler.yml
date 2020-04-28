@@ -14,5 +14,5 @@ jobs:
           xs_max_size: '1'
           s_max_size: '2'
           m_max_size: '3'
-          l_max_size: '400'
+          l_max_size: '5'
           fail_if_xl: 'false'
