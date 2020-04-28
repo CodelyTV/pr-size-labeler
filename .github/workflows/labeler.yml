@@ -14,6 +14,6 @@ jobs:
           xs_max_size: '1'
           s_max_size: '2'
           m_max_size: '3'
-          l_max_size: '450'
-          fail_if_xl: 'true'
+          l_max_size: '4'
+          fail_if_xl: 'false'
           message_if_xl: 'This PR is sooooo big!! 😳'
