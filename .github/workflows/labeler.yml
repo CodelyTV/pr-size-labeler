@@ -19,4 +19,4 @@ jobs:
           message_if_xl: 'This PR is sooooo big!! 😳'
 
       - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@v1
+        uses: ludeeus/action-shellcheck@1.0.0
