@@ -17,3 +17,6 @@ jobs:
           l_max_size: '450'
           fail_if_xl: 'true'
           message_if_xl: 'This PR is sooooo big!! 😳'
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@v1
