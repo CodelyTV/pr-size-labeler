@@ -20,7 +20,7 @@ jobs:
 
   enterprise-labeler:
     runs-on: ubuntu-latest
-    name: Label the PR size
+    name: Label the PR size for GHES support
     steps:
       - uses: actions/checkout@v1
       - uses: ./
