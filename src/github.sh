@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-GITHUB_API_URI="https://api.github.com"
+GITHUB_API_URI="https://$PR_SIZE_LABELER_API"
 GITHUB_API_HEADER="Accept: application/vnd.github.v3+json"
 
 github::calculate_total_modifications() {
