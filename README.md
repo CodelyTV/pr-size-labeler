@@ -47,6 +47,17 @@ jobs:
 
 > Setting `fail_if_xl` to `'true'` will make fail all pull requests bigger than `l_max_size`.
 
+### Github Enterprise Server
+
+You can override the public Github API by setting `github_api_url`.
+
+```yml
+- uses: codelytv/pr-size-labeler@v1
+  with:
+    ...
+    github_api_url: 'github.mycompany.net/api/v3'
+```
+
 ## ⚖️ License
 
 [MIT](LICENSE)
