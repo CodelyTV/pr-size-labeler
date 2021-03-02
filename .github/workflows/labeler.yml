@@ -17,19 +17,4 @@ jobs:
           l_max_size: '450'
           fail_if_xl: 'true'
           message_if_xl: 'This PR is sooooo big!! 😳'
-
-  enterprise-labeler:
-    runs-on: ubuntu-latest
-    name: Label the PR size for GHES support
-    steps:
-      - uses: actions/checkout@v1
-      - uses: ./
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          xs_max_size: '10'
-          s_max_size: '50'
-          m_max_size: '200'
-          l_max_size: '450'
-          fail_if_xl: 'true'
-          message_if_xl: 'This PR is sooooo big!! 😳'
-          github_api_url: 'api.github.com'
+          github_api_url: 'api.github.com' # need to use public api for override as there is not testing GHES available
