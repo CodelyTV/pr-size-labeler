@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-GITHUB_API_URI="https://$PR_SIZE_LABELER_API"
-GITHUB_API_HEADER="Accept: application/vnd.github.v3+json"
+GITHUB_API_URI=${GITHUB_API_URI:-"https://$PR_SIZE_LABELER_API"}
+GITHUB_API_HEADER=${GITHUB_API_HEADER:-"Accept: application/vnd.github.v3+json"}
 
 github::calculate_total_modifications() {
   local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URI/repos/$GITHUB_REPOSITORY/pulls/$1")
