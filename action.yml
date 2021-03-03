@@ -28,6 +28,10 @@ inputs:
     description: 'Message to show if the PR is xl size'
     required: false
     default: ''
+  github_api_url:
+    description: 'URI to the API of your Github Server, necessary for Github Enterprise customers'
+    required: false
+    default: 'api.github.com'
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -39,6 +43,7 @@ runs:
     - ${{ inputs.l_max_size }}
     - ${{ inputs.fail_if_xl }}
     - ${{ inputs.message_if_xl }}
+    - ${{ inputs.github_api_url }}
 branding:
   icon: 'tag'
   color: 'green'

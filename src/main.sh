@@ -9,7 +9,7 @@ source "$PR_SIZE_LABELER_HOME/src/misc.sh"
 main() {
   ensure::env_variable_exist "GITHUB_REPOSITORY"
   ensure::env_variable_exist "GITHUB_EVENT_PATH"
-  ensure::total_args 7 "$@"
+  ensure::total_args 8 "$@"
 
   export GITHUB_TOKEN="$1"
 

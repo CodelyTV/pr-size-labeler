@@ -17,3 +17,4 @@ jobs:
           l_max_size: '450'
           fail_if_xl: 'true'
           message_if_xl: 'This PR is sooooo big!! 😳'
+          github_api_url: 'api.github.com' # It would be ideal to test this out pointing to a GitHub Enterprise server, but there are no testing environments available
