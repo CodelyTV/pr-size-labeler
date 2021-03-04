@@ -40,7 +40,11 @@ jobs:
           m_max_size: '500'
           l_max_size: '1000'
           fail_if_xl: 'false'
-          message_if_xl: 'This PR is so big! Please, split it 😊'
+          message_if_xl: >
+            'This PR exceeds the recommended size of 1000 lines.
+            Please make sure you are NOT addressing multiple issues with one PR.
+            Note this PR might be rejected due to its size.’
+          github_api_url: 'api.github.com'
 ```
 
 > If you want, you can customize all `*_max_size` with the size that fits in your project.
