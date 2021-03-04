@@ -16,5 +16,8 @@ jobs:
           m_max_size: '200'
           l_max_size: '450'
           fail_if_xl: 'true'
-          message_if_xl: 'This PR is sooooo big!! 😳'
+          message_if_xl: >
+            'This PR exceeds the recommended size of 1000 lines.
+            Please make sure you are NOT addressing multiple issues with one PR.
+            Note this PR might be rejected due to its size.’
           github_api_url: 'api.github.com' # It would be ideal to test this out pointing to a GitHub Enterprise server, but there are no testing environments available
