@@ -1,6 +1,6 @@
 <p align="center">
   <a href="http://codely.tv">
-    <img src="http://codely.tv/wp-content/uploads/2016/05/cropped-logo-codelyTV.png" width="192px" height="192px"/>
+    <img alt="CodelyTV logo" src="http://codely.tv/wp-content/uploads/2016/05/cropped-logo-codelyTV.png" width="192px" height="192px"/>
   </a>
 </p>
 
@@ -20,7 +20,9 @@
 
 ## 🚀 Usage
 
-Create a file named `labeler.yml` inside the `.github/workflows` directory and paste:
+Create a file named `labeler.yml` inside the `.github/workflows` directory and paste the following configuration.
+
+☝️ Here you can see the default values of all available configuration parameters, however, the only required parameter is the `GITHUB_TOKEN` one.
 
 ```yml
 name: labeler
@@ -47,20 +49,16 @@ jobs:
           github_api_url: 'api.github.com'
 ```
 
-> If you want, you can customize all `*_max_size` with the size that fits in your project.
+## 🎛️ Available parameters
 
-> Setting `fail_if_xl` to `'true'` will make fail all pull requests bigger than `l_max_size`.
+- `*_max_size` (`xs_max_size`, `s_max_size`…): Adjust which amount of changes you consider appropriate for each size based on your project context
+- `fail_if_xl`: Set to `'true'` will report GitHub Workflow failure if the PR size is xl allowing to forbid PR merge
+- `github_api_url`: Override this parameter in order to use with your own GitHub Enterprise Server. Example: `'github.example.com/api/v3'`
 
-### Github Enterprise Server
+## 🤔 Basic concepts or assumptions
 
-You can override the public Github API by setting `github_api_url`.
-
-```yml
-- uses: codelytv/pr-size-labeler@v1
-  with:
-    ...
-    github_api_url: 'github.mycompany.net/api/v3'
-```
+- PR size labeler consider as a change any kind of line addition, deletion, or modification
+- A PR will be labeled as `xl` if it exceeds the amount of changes defined as `l_max_size`
 
 ## ⚖️ License
 
