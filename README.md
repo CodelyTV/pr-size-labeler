@@ -37,10 +37,15 @@ jobs:
       - uses: codelytv/pr-size-labeler@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          xs_label: 'size/xs'
           xs_max_size: '10'
+          s_label: 'size/s'
           s_max_size: '100'
+          m_label: 'size/m'
           m_max_size: '500'
+          l_label: 'size/l'
           l_max_size: '1000'
+          xl_label: 'size/xl'
           fail_if_xl: 'false'
           message_if_xl: >
             'This PR exceeds the recommended size of 1000 lines.
@@ -51,6 +56,7 @@ jobs:
 
 ## 🎛️ Available parameters
 
+- `*_label` (`xs_label`, `s_label`…): Adjust size label names
 - `*_max_size` (`xs_max_size`, `s_max_size`…): Adjust which amount of changes you consider appropriate for each size based on your project context
 - `fail_if_xl`: Set to `'true'` will report GitHub Workflow failure if the PR size is xl allowing to forbid PR merge
 - `github_api_url`: Override this parameter in order to use with your own GitHub Enterprise Server. Example: `'github.example.com/api/v3'`
