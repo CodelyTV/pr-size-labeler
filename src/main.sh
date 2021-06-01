@@ -11,9 +11,9 @@ main() {
   ensure::env_variable_exist "GITHUB_EVENT_PATH"
   ensure::total_args 13 "$@"
 
-  export GITHUB_TOKEN="$1"
+  export GITHUB_TOKEN="${1}"
 
-  labeler::label "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" "$10" "$11" "$12"
+  labeler::label "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" "${8}" "${9}" "${10}" "${11}" "${12}"
 
   exit $?
 }

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 labeler::label() {
-  local -r xs_label="$1"
-  local -r s_label="$3"
-  local -r m_label="$5"
-  local -r l_label="$7"
-  local -r xl_label="$9"
-  local -r fail_if_xl="$10"
-  local -r message_if_xl="$11"
+  local -r xs_label="${1}"
+  local -r s_label="${3}"
+  local -r m_label="${5}"
+  local -r l_label="${7}"
+  local -r xl_label="${9}"
+  local -r fail_if_xl="${10}"
+  local -r message_if_xl="${11}"
 
   local -r pr_number=$(github_actions::get_pr_number)
   local -r total_modifications=$(github::calculate_total_modifications "$pr_number")
@@ -33,16 +33,16 @@ labeler::label() {
 }
 
 labeler::label_for() {
-  local -r total_modifications="$1"
-  local -r xs_label="$2"
-  local -r xs_max_size="$3"
-  local -r s_label="$4"
-  local -r s_max_size="$5"
-  local -r m_label="$6"
-  local -r m_max_size="$7"
-  local -r l_label="$8"
-  local -r l_max_size="$9"
-  local -r xl_label="$10"
+  local -r total_modifications="${1}"
+  local -r xs_label="${2}"
+  local -r xs_max_size="${3}"
+  local -r s_label="${4}"
+  local -r s_max_size="${5}"
+  local -r m_label="${6}"
+  local -r m_max_size="${7}"
+  local -r l_label="${8}"
+  local -r l_max_size="${9}"
+  local -r xl_label="${10}"
 
   if [ "$total_modifications" -lt "$xs_max_size" ]; then
     label="$xs_label"
