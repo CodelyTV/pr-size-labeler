@@ -9,7 +9,12 @@ source "$PR_SIZE_LABELER_HOME/src/misc.sh"
 main() {
   ensure::env_variable_exist "GITHUB_REPOSITORY"
   ensure::env_variable_exist "GITHUB_EVENT_PATH"
-  ensure::total_args 8 "$@"
+  ensure::total_args 7 "$@"
+
+  if [ -z "$GITHUB_API_URL" ]; then
+    log::message "GITHUB_API_URL not set, using default: https://api.github.com"
+    export GITHUB_API_URL="https://api.github.com"
+  fi
 
   export GITHUB_TOKEN="$1"
 
