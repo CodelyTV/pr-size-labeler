@@ -8,8 +8,8 @@ if [ "$PR_SIZE_LABELER_HOME" == "/" ]; then
   PR_SIZE_LABELER_HOME=""
 fi
 
-if [ ! -z "$8" ]; then
-    PR_SIZE_LABELER_API=$8
+if [ ! -z "${13}" ]; then
+    PR_SIZE_LABELER_API="${13}"
 fi
 
 export PR_SIZE_LABELER_HOME

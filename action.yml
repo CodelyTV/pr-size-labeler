@@ -4,22 +4,42 @@ inputs:
   GITHUB_TOKEN:
     description: 'GitHub token'
     required: true
+  xs_label:
+    description: 'Label for xs PR'
+    required: false
+    default: 'size/xs'
   xs_max_size:
     description: 'Max size for a PR to be considered xs'
     required: false
     default: '10'
+  s_label:
+    description: 'Label for s PR'
+    required: false
+    default: 'size/s'
   s_max_size:
     description: 'Max size for a PR to be considered s'
     required: false
     default: '100'
+  m_label:
+    description: 'Label for m PR'
+    required: false
+    default: 'size/m'
   m_max_size:
     description: 'Max size for a PR to be considered m'
     required: false
     default: '500'
+  l_label:
+    description: 'Label for l PR'
+    required: false
+    default: 'size/l'
   l_max_size:
     description: 'Max size for a PR to be considered l'
     required: false
     default: '1000'
+  xl_label:
+    description: 'Label for xl PR'
+    required: false
+    default: 'size/xl'
   fail_if_xl:
     description: 'Report GitHub Workflow failure if the PR size is xl allowing to forbid PR merge'
     required: false
@@ -40,10 +60,15 @@ runs:
   image: 'Dockerfile'
   args:
     - ${{ inputs.GITHUB_TOKEN }}
+    - ${{ inputs.xs_label }}
     - ${{ inputs.xs_max_size }}
+    - ${{ inputs.s_label }}
     - ${{ inputs.s_max_size }}
+    - ${{ inputs.m_label }}
     - ${{ inputs.m_max_size }}
+    - ${{ inputs.l_label }}
     - ${{ inputs.l_max_size }}
+    - ${{ inputs.xl_label }}
     - ${{ inputs.fail_if_xl }}
     - ${{ inputs.message_if_xl }}
     - ${{ inputs.github_api_url }}
