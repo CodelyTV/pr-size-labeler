@@ -55,6 +55,10 @@ inputs:
     description: 'URI to the API of your Github Server, only necessary for Github Enterprise customers'
     required: false
     default: 'api.github.com'
+  files_to_ignore:
+    description: 'Whitespace separated list of files to ignore when calculating the PR size (sum of changes)'
+    required: false
+    default: ''
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -72,6 +76,7 @@ runs:
     - ${{ inputs.fail_if_xl }}
     - ${{ inputs.message_if_xl }}
     - ${{ inputs.github_api_url }}
+    - ${{ inputs.files_to_ignore }}
 branding:
   icon: 'tag'
   color: 'green'
