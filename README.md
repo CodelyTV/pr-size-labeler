@@ -59,7 +59,7 @@ jobs:
 - `*_label` (`xs_label`, `s_label`…): Adjust size label names
 - `*_max_size` (`xs_max_size`, `s_max_size`…): Adjust which amount of changes you consider appropriate for each size based on your project context
 - `fail_if_xl`: Set to `'true'` will report GitHub Workflow failure if the PR size is xl allowing to forbid PR merge
-- `github_api_url`: Override this parameter in order to use with your own GitHub Enterprise Server. Example: `'github.example.com/api/v3'`
+- `github_api_url`: Override this parameter in order to use with your own GitHub Enterprise Server. Example: `'https://github.example.com/api/v3'`
 
 ## 🤔 Basic concepts or assumptions
 
