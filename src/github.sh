@@ -14,6 +14,7 @@ github::calculate_total_modifications() {
 
     echo $((additions + deletions))
   else
+    echo "GOES HEREEEE"
     local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number/files?per_page=100")
 
     local changes=0
