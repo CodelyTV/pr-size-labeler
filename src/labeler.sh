@@ -35,15 +35,15 @@ labeler::label() {
 }
 
 labeler::label_for() {
-  local -r total_modifications="${1}"
+  local -r total_modifications=${1}
   local -r xs_label="${2}"
-  local -r xs_max_size="${3}"
+  local -r xs_max_size=${3}
   local -r s_label="${4}"
-  local -r s_max_size="${5}"
+  local -r s_max_size=${5}
   local -r m_label="${6}"
-  local -r m_max_size="${7}"
+  local -r m_max_size=${7}
   local -r l_label="${8}"
-  local -r l_max_size="${9}"
+  local -r l_max_size=${9}
   local -r xl_label="${10}"
 
   if [ "$total_modifications" -lt "$xs_max_size" ]; then

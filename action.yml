@@ -48,13 +48,13 @@ inputs:
     description: 'Message to show if the PR size is xl'
     required: false
     default: >
-      'This PR exceeds the recommended size of 1000 lines.
+      This PR exceeds the recommended size of 1000 lines.
       Please make sure you are NOT addressing multiple issues with one PR.
-      Note this PR might be rejected due to its size.’
+      Note this PR might be rejected due to its size.
   github_api_url:
-    description: 'URI to the API of your Github Server, only necessary for Github Enterprise customers'
+    description: 'URL to the API of your Github Server, only necessary for Github Enterprise customers'
     required: false
-    default: 'api.github.com'
+    default: 'https://api.github.com'
   files_to_ignore:
     description: 'Whitespace separated list of files to ignore when calculating the PR size (sum of changes)'
     required: false
@@ -63,20 +63,20 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.GITHUB_TOKEN }}
-    - ${{ inputs.xs_label }}
-    - ${{ inputs.xs_max_size }}
-    - ${{ inputs.s_label }}
-    - ${{ inputs.s_max_size }}
-    - ${{ inputs.m_label }}
-    - ${{ inputs.m_max_size }}
-    - ${{ inputs.l_label }}
-    - ${{ inputs.l_max_size }}
-    - ${{ inputs.xl_label }}
-    - ${{ inputs.fail_if_xl }}
-    - ${{ inputs.message_if_xl }}
-    - ${{ inputs.github_api_url }}
-    - ${{ inputs.files_to_ignore }}
+    - --github_token=${{ inputs.GITHUB_TOKEN }}
+    - --github_api_url=${{ inputs.github_api_url }}
+    - --xs_label=${{ inputs.xs_label }}
+    - --xs_max_size=${{ inputs.xs_max_size }}
+    - --s_label=${{ inputs.s_label }}
+    - --s_max_size=${{ inputs.s_max_size }}
+    - --m_label=${{ inputs.m_label }}
+    - --m_max_size=${{ inputs.m_max_size }}
+    - --l_label=${{ inputs.l_label }}
+    - --l_max_size=${{ inputs.l_max_size }}
+    - --xl_label=${{ inputs.xl_label }}
+    - --fail_if_xl=${{ inputs.fail_if_xl }}
+    - --message_if_xl="${{ inputs.message_if_xl }}"
+    - --files_to_ignore=${{ inputs.files_to_ignore }}
 branding:
   icon: 'tag'
   color: 'green'
