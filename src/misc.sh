@@ -25,3 +25,7 @@ coll::map() {
 str::quote() {
   echo "\"$1\""
 }
+
+jq::base64() {
+  echo "$file" | base64 -d | jq -r "$1"
+}

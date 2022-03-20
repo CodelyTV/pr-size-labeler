@@ -3,12 +3,31 @@
 GITHUB_API_HEADER="Accept: application/vnd.github.v3+json"
 
 github::calculate_total_modifications() {
-  local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$1")
+  local -r pr_number="${1}"
+  local -r files_to_ignore="${2}"
 
-  local -r additions=$(echo "$body" | jq '.additions')
-  local -r deletions=$(echo "$body" | jq '.deletions')
+  if [ -z "$files_to_ignore" ]; then
+    local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number")
 
-  echo $((additions + deletions))
+    local -r additions=$(echo "$body" | jq '.additions')
+    local -r deletions=$(echo "$body" | jq '.deletions')
+
+    echo $((additions + deletions))
+  else
+    local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number/files?per_page=100")
+
+    local changes=0
+    for file in $(echo "$body" | jq -r '.[] | @base64'); do
+      for file_to_ignore in $files_to_ignore; do
+        if [ "$file_to_ignore" != "$(basename $(jq::base64 '.filename'))" ]; then
+          total_changes=$(jq::base64 '.changes')
+          ((changes += total_changes))
+        fi
+      done
+    done
+
+    echo $changes
+  fi
 }
 
 github::add_label_to_pr() {
