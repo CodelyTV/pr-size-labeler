@@ -17,13 +17,17 @@ github::calculate_total_modifications() {
     local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number/files?per_page=100")
 
     local changes=0
+
     for file in $(echo "$body" | jq -r '.[] | @base64'); do
+      local ignore_file=0
       for file_to_ignore in $files_to_ignore; do
-        if [ "$file_to_ignore" != "$(basename $(jq::base64 '.filename'))" ]; then
-          total_changes=$(jq::base64 '.changes')
-          ((changes += total_changes))
+        if [ "$file_to_ignore" = "$(basename $(jq::base64 '.filename'))" ]; then
+          ignore_file=1
         fi
       done
+      if [ $ignore_file -eq 0 ]; then
+        ((changes += $(jq::base64 '.changes')))
+      fi
     done
 
     echo $changes
