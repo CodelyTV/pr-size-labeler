@@ -53,6 +53,7 @@ jobs:
             Note this PR might be rejected due to its size.
           github_api_url: 'api.github.com'
           files_to_ignore: ''
+          patterns_to_ignore: ''
 ```
 
 ## 🎛️ Available parameters
@@ -63,6 +64,8 @@ jobs:
 - `message_if_xl`: Let the user(s) know that the PR exceeds the recommended size and what the consequences are
 - `github_api_url`: Override this parameter in order to use with your own GitHub Enterprise Server. Example: `'https://github.example.com/api/v3'`
 - `files_to_ignore`: Whitespace separated list of files to ignore when calculating the PR size. Example: `'package-lock.json Pipfile.lock'`
+- `patterns_to_ignore`: Whitespace separated list of patterns to ignore when calculating the PR size. Example: `'**/__generated__/**'`
+
 
 ## 🤔 Basic concepts or assumptions
 

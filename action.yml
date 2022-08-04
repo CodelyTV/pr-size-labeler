@@ -59,6 +59,10 @@ inputs:
     description: 'Whitespace separated list of files to ignore when calculating the PR size (sum of changes)'
     required: false
     default: ''
+  patterns_to_ignore:
+    description: 'Whitespace separated list of patterns to ignore when calculating the PR size (sum of changes)'
+    required: false
+    default: ''
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -77,6 +81,7 @@ runs:
     - --fail_if_xl=${{ inputs.fail_if_xl }}
     - --message_if_xl="${{ inputs.message_if_xl }}"
     - --files_to_ignore=${{ inputs.files_to_ignore }}
+    - --patterns_to_ignore=${{ inputs.patterns_to_ignore }}
 branding:
   icon: 'tag'
   color: 'green'

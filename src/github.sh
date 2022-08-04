@@ -5,8 +5,9 @@ GITHUB_API_HEADER="Accept: application/vnd.github.v3+json"
 github::calculate_total_modifications() {
   local -r pr_number="${1}"
   local -r files_to_ignore="${2}"
+  local -r patterns_to_ignore="${3}"
 
-  if [ -z "$files_to_ignore" ]; then
+  if [ -z "$files_to_ignore" | -z "$patterns_to_ignore" ]; then
     local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number")
 
     local -r additions=$(echo "$body" | jq '.additions')
@@ -23,6 +24,11 @@ github::calculate_total_modifications() {
       for file_to_ignore in $files_to_ignore; do
         if [ "$file_to_ignore" = "$(basename $(jq::base64 '.filename'))" ]; then
           ignore_file=1
+        fi
+      done
+      for pattern_to_ignore in $patterns_to_ignore; do
+        if [[ $file == $pattern_to_ignore ]]; then 
+            ignore_file=1
         fi
       done
       if [ $ignore_file -eq 0 ]; then
