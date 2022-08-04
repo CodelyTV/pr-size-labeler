@@ -7,7 +7,7 @@ github::calculate_total_modifications() {
   local -r files_to_ignore="${2}"
   local -r patterns_to_ignore="${3}"
 
-  if [ -z "$files_to_ignore" | -z "$patterns_to_ignore" ]; then
+  if [ -z "$files_to_ignore" & -z "$patterns_to_ignore" ]; then
     local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number")
 
     local -r additions=$(echo "$body" | jq '.additions')
