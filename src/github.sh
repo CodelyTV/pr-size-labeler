@@ -27,6 +27,8 @@ github::calculate_total_modifications() {
         fi
       done
       for pattern_to_ignore in $patterns_to_ignore; do
+        echo $file
+        echo $pattern_to_ignore
         if [[ $file == $pattern_to_ignore ]]; then 
             ignore_file=1
         fi
