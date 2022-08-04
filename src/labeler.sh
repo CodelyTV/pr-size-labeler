@@ -17,6 +17,7 @@ labeler::label() {
   log::message "Total modifications (additions + deletions): $total_modifications"
   log::message "Ignoring files (if present): $files_to_ignore"
   log::message "Ignoring patterns (if present): $patterns_to_ignore"
+  log::message "This is a new version"
 
   local -r label_to_add=$(labeler::label_for "$total_modifications" "$@")
 
