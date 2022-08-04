@@ -6,6 +6,7 @@ github::calculate_total_modifications() {
   local -r pr_number="${1}"
   local -r files_to_ignore="${2}"
   local -r patterns_to_ignore="${3}"
+  local -r "this is a new version"
 
   if [ -z "$files_to_ignore" & -z "$patterns_to_ignore" ]; then
     local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number")
@@ -26,6 +27,7 @@ github::calculate_total_modifications() {
           ignore_file=1
         fi
       done
+      echo "do you come here?"
       for pattern_to_ignore in $patterns_to_ignore; do
         echo $file
         echo $pattern_to_ignore
