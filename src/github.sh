@@ -20,9 +20,9 @@ github::calculate_total_modifications() {
 
     for file in $(echo "$body" | jq -r '.[] | @base64'); do
       local ignore_file=0
-      for file_to_ignore in $files_to_ignore; do
-        if [[ "$(jq::base64 '.filename')" =~ $file_to_ignore ]]; then
-          echo "IGNORING FILE $(jq::base64 '.filename') : $file_to_ignore"
+      for regex_to_ignore in $files_to_ignore; do
+        if [[ "$(jq::base64 '.filename')" =~ $regex_to_ignore ]]; then
+          echo "IGNORING FILE $(jq::base64 '.filename') : $regex_to_ignore"
           ignore_file=1
         fi
       done
