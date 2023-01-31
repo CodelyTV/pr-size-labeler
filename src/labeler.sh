@@ -28,7 +28,7 @@ labeler::label() {
 		fi
 
 		if [ "$fail_if_xl" == "true" ]; then
-			echoerr "Pr is xl, please, short this!!"
+			echoerr "Pr is xl, please, short this!!" 2>&1 | log::file "PR is XL"
 			exit 1
 		fi
 	fi
