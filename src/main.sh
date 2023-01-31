@@ -15,8 +15,8 @@ main() {
 	log::file "Starting the labeling process"
 	eval "$(/root/bin/docpars -h "$(grep "^##?" "$PR_SIZE_LABELER_HOME/src/main.sh" | cut -c 5-)" : "$@")"
 
-	ensure::env_variable_exist "GITHUB_REPOSITORY" 2>&1 | log::file "Checking env variable"
-	ensure::env_variable_exist "GITHUB_EVENT_PATH" 2>&1 | log::file "Checking env variable"
+	ensure::env_variable_exist "GITHUB_REPOSITORY"
+	ensure::env_variable_exist "GITHUB_EVENT_PATH"
 
 	export GITHUB_TOKEN="$github_token"
 	export GITHUB_API_URL="$github_api_url"
@@ -36,10 +36,12 @@ main() {
 		"$files_to_ignore"
 
 	status=$?
+
 	if [ $status -ne 0 ]; then
-		echo "Some error occurred. Log:"
+		echo "Some error occurred. Execution log:"
 		cat "$HOME/labeler.log"
-		exit $?
+
+		exit $status
 	fi
 
 	exit 0

@@ -13,12 +13,12 @@ labeler::label() {
 	local -r pr_number=$(github_actions::get_pr_number)
 	local -r total_modifications=$(github::calculate_total_modifications "$pr_number" "$files_to_ignore")
 
-	log::message "Total modifications (additions + deletions): $total_modifications"
-	log::message "Ignoring files (if present): $files_to_ignore"
+	echo "$total_modifications" | log::file "Total modifications (additions + deletions)"
+	echo "$files_to_ignore" | log::file "Ignoring files (if present)"
 
 	local -r label_to_add=$(labeler::label_for "$total_modifications" "$@")
 
-	log::message "Labeling pull request with $label_to_add"
+	echo "$label_to_add" | log::file "Labeling pull request"
 
 	github::add_label_to_pr "$pr_number" "$label_to_add" "$xs_label" "$s_label" "$m_label" "$l_label" "$xl_label"
 
@@ -28,8 +28,8 @@ labeler::label() {
 		fi
 
 		if [ "$fail_if_xl" == "true" ]; then
-			echoerr "Pr is xl, please, short this!!" 2>&1 | log::file "PR is XL"
-			exit 1
+			log::file "Pr is xl, please, short this!!"
+			return 1
 		fi
 	fi
 }

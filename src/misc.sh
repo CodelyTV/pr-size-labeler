@@ -4,10 +4,6 @@ echoerr() {
 	echo "$@" 1>&2
 }
 
-log::message() {
-	echo "$@"
-}
-
 coll::join_by() {
 	local IFS="$1"
 	shift

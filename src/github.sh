@@ -51,7 +51,7 @@ github::add_label_to_pr() {
 	labels=$(printf "%s\n%s" "$labels" "$label_to_add")
 	local -r comma_separated_labels=$(github::format_labels "$labels")
 
-	log::message "Final labels: $comma_separated_labels"
+	echo "$comma_separated_labels" | log::file "Final labels"
 
 	curl -sSL \
 		-H "Authorization: token $GITHUB_TOKEN" \
@@ -81,11 +81,13 @@ github::format_labels() {
 github::comment() {
 	local -r comment="$1"
 
+	echo "$comment" | log::file "Comment to publish to GitHub"
+
 	curl -sSL \
 		-H "Authorization: token $GITHUB_TOKEN" \
 		-H "$GITHUB_API_HEADER" \
 		-X POST \
 		-H "Content-Type: application/json" \
-		-d "{\"body\":$comment}" \
+		-d "{\"body\":\"$comment\"}" \
 		"$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/issues/$pr_number/comments"
 }
