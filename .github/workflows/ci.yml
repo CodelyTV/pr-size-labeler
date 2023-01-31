@@ -3,6 +3,19 @@ name: labeler
 on: [pull_request]
 
 jobs:
+
+  static-analysis:
+    runs-on: ubuntu-latest
+    name: 💿 Static analysis
+    steps:
+      - uses: actions/checkout@v3
+      - name: 💿 Static analysis
+        uses: ludeeus/action-shellcheck@master
+        with:
+          ignore_names: github.sh
+        env:
+          SHELLCHECK_OPTS: -s bash -S warning -e SC1090 -e SC2010 -e SC2154
+
   labeler:
     runs-on: ubuntu-latest
     name: Label the PR size
