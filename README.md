@@ -62,8 +62,16 @@ jobs:
 - `fail_if_xl`: Set to `'true'` will report GitHub Workflow failure if the PR size is xl allowing to forbid PR merge
 - `message_if_xl`: Let the user(s) know that the PR exceeds the recommended size and what the consequences are
 - `github_api_url`: Override this parameter in order to use with your own GitHub Enterprise Server. Example: `'https://github.example.com/api/v3'`
-- `files_to_ignore`: Whitespace separated list of files to ignore when calculating the PR size. Example: `'package-lock.json Pipfile.lock'`
-
+- `files_to_ignore`: Whitespace or newline separated list of files to ignore when calculating the PR size, regex match is supported.
+### files_to_ignore Example: 
+```yml
+files_to_ignore: 'package-lock.json *.lock'
+# OR
+files_to_ignore: |
+  "package-lock.json"
+  "*.lock"
+  "docs/*"
+```
 ## 🤔 Basic concepts or assumptions
 
 - PR size labeler consider as a change any kind of line addition, deletion, or modification
