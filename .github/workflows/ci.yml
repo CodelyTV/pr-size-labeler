@@ -35,5 +35,5 @@ jobs:
             Note this PR might be rejected due to its size.
           files_to_ignore: |
             "package.json"
-            "*.lock"
+            "**/*.lock"
             "docs/*"
