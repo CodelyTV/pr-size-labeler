@@ -23,5 +23,5 @@ str::quote() {
 }
 
 jq::base64() {
-	echo "$file" | base64 -d | jq -r "$1"
+	echo "$1" | base64 -d | jq -r "$2"
 }
