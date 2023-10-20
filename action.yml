@@ -55,6 +55,10 @@ inputs:
     description: 'URL to the API of your Github Server, only necessary for Github Enterprise customers'
     required: false
     default: 'https://api.github.com'
+  ignore_deleted:
+    description: 'Ignore deleted files when calculating the PR size'
+    required: false
+    default: 'false'
   files_to_ignore:
     description: 'Whitespace separated list of files to ignore when calculating the PR size (sum of changes)'
     required: false
@@ -76,6 +80,7 @@ runs:
     - --xl_label=${{ inputs.xl_label }}
     - --fail_if_xl=${{ inputs.fail_if_xl }}
     - --message_if_xl="${{ inputs.message_if_xl }}"
+    - --ignore_deleted=${{ inputs.ignore_deleted }}
     - --files_to_ignore=${{ inputs.files_to_ignore }}
 branding:
   icon: 'tag'

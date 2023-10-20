@@ -5,8 +5,9 @@ GITHUB_API_HEADER="Accept: application/vnd.github.v3+json"
 github::calculate_total_modifications() {
   local -r pr_number="${1}"
   local -r files_to_ignore="${2}"
+  local -r ignore_deleted="${3}"
 
-  if [ -z "$files_to_ignore" ]; then
+  if [[ (-z "$files_to_ignore" && "$ignore_deleted" == 'false') ]]; then
     local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number")
 
     local -r additions=$(echo "$body" | jq '.additions')
@@ -20,6 +21,10 @@ github::calculate_total_modifications() {
 
     for file in $(echo "$body" | jq -r '.[] | @base64'); do
       local ignore_file=0
+      if [[ ( "$ignore_deleted" == 'true' && "$(jq::base64 '.status')" == 'removed') ]]; then
+        echo "Ignoring deleted file: $(jq::base64 '.filename')"
+        continue
+      fi
       for file_to_ignore in $files_to_ignore; do
         if [ -z "$file_to_ignore" ]; then
           continue
