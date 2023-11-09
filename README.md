@@ -65,12 +65,12 @@ jobs:
 - `files_to_ignore`: Whitespace or newline separated list of files to ignore when calculating the PR size, regex match is supported.
 ### files_to_ignore Example: 
 ```yml
-files_to_ignore: 'package-lock.json *.lock'
+files_to_ignore: 'package-lock\\.json .*\\.lock'
 # OR
 files_to_ignore: |
-  "package-lock.json"
-  "*.lock"
-  "docs/*"
+  "package-lock\\.json"
+  ".*\\.lock"
+  "docs/.*"
 ```
 ## 🤔 Basic concepts or assumptions
 
