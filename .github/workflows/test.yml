@@ -1,0 +1,15 @@
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+name: Tests
+jobs:
+  tests:
+    name: "Run tests"
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Tests"
+        run: ./lib/bashunit
