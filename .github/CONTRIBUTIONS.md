@@ -2,7 +2,7 @@
 
 Tests written in [bashunit](https://bashunit.typeddevs.com/).
 
-Install bashunit dependency:
+Install vendor dependencies:
 ```bash
 ./install-dependencies.sh
 ```
@@ -11,4 +11,3 @@ Run all tests:
 ```bash
 ./lib/bashunit tests
 ```
-
