@@ -1,8 +1,14 @@
 # Testing
-* [Documentation](https://bashunit.typeddevs.com/)
 
-## How to run the test
+Tests written in [bashunit](https://bashunit.typeddevs.com/).
 
+Install bashunit dependency:
 ```bash
-./lib/bashunit 
+./install-dependencies.sh
 ```
+
+Run all tests:
+```bash
+./lib/bashunit tests
+```
+
