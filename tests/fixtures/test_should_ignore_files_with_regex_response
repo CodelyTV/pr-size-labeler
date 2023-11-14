@@ -1,0 +1,74 @@
+[
+  {
+    "filename": ".editorconfig",
+    "additions": 9,
+    "deletions": 0,
+    "changes": 9
+  },
+  {
+    "filename": ".github/workflows/ci.yml",
+    "additions": 17,
+    "deletions": 0,
+    "changes": 17
+  },
+  {
+    "filename": "asdasdasd.lock",
+    "additions": 1188,
+    "deletions": 0,
+    "changes": 1188
+  },
+  {
+    "filename": "entrypoint.sh",
+    "additions": 4,
+    "deletions": 4,
+    "changes": 8
+  },
+  {
+    "filename": "src/ensure.sh",
+    "additions": 4,
+    "deletions": 4,
+    "changes": 8
+  },
+  {
+    "filename": "src/github.sh",
+    "additions": 89,
+    "deletions": 76,
+    "changes": 165
+  },
+  {
+    "filename": "src/github_actions.sh",
+    "additions": 1,
+    "deletions": 1,
+    "changes": 2
+  },
+  {
+    "filename": "src/inner.lock",
+    "additions": 1188,
+    "deletions": 0,
+    "changes": 1188
+  },
+  {
+    "filename": "src/labeler.sh",
+    "additions": 48,
+    "deletions": 48,
+    "changes": 96
+  },
+  {
+    "filename": "src/log.sh",
+    "additions": 17,
+    "deletions": 0,
+    "changes": 17
+  },
+  {
+    "filename": "src/main.sh",
+    "additions": 34,
+    "deletions": 23,
+    "changes": 57
+  },
+  {
+    "filename": "src/misc.sh",
+    "additions": 10,
+    "deletions": 14,
+    "changes": 24
+  }
+]
