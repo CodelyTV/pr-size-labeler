@@ -54,7 +54,7 @@ inputs:
   github_api_url:
     description: 'URL to the API of your Github Server, only necessary for Github Enterprise customers'
     required: false
-    default: 'https://api.github.com'
+    default: '${{ github.api_url }}'
   files_to_ignore:
     description: 'Whitespace separated list of files to ignore when calculating the PR size (sum of changes)'
     required: false
