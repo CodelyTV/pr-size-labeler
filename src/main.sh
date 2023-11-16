@@ -9,7 +9,7 @@ source "$PR_SIZE_LABELER_HOME/src/misc.sh"
 ##? Adds a size label to a GitHub Pull Request
 ##?
 ##? Usage:
-##?   main.sh --github_token=<token> --xs_label=<label> --xs_max_size=<size> --s_label=<label> --s_max_size=<size> --m_label=<label> --m_max_size=<size> --l_label=<label> --l_max_size=<size> --xl_label=<label> --fail_if_xl=<false> --message_if_xl=<message> --github_api_url=<url> --files_to_ignore=<files>
+##?   main.sh --github_token=<token> --xs_label=<label> --xs_max_size=<size> --s_label=<label> --s_max_size=<size> --m_label=<label> --m_max_size=<size> --l_label=<label> --l_max_size=<size> --xl_label=<label> --fail_if_xl=<false> --message_if_xl=<message> --github_api_url=<url> --ignore_deleted=<false> --files_to_ignore=<files>
 main() {
   eval "$(/root/bin/docpars -h "$(grep "^##?" "$PR_SIZE_LABELER_HOME/src/main.sh" | cut -c 5-)" : "$@")"
 
@@ -31,6 +31,7 @@ main() {
     "$xl_label" \
     "$fail_if_xl" \
     "$message_if_xl" \
+    "$ignore_deleted" \
     "$files_to_ignore"
 
   exit $?

@@ -8,11 +8,13 @@ labeler::label() {
   local -r xl_label="${9}"
   local -r fail_if_xl="${10}"
   local -r message_if_xl="${11}"
-  local -r files_to_ignore="${12}"
+  local -r ignore_deleted="${12}"
+  local -r files_to_ignore="${13}"
 
   local -r pr_number=$(github_actions::get_pr_number)
-  local -r total_modifications=$(github::calculate_total_modifications "$pr_number" "$files_to_ignore")
+  local -r total_modifications=$(github::calculate_total_modifications "$pr_number" "$files_to_ignore" "$ignore_deleted")
 
+  log::message "Should ignore deleted files: $ignore_deleted"
   log::message "Total modifications (additions + deletions): $total_modifications"
   log::message "Ignoring files (if present): $files_to_ignore"
 
