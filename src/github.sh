@@ -24,7 +24,7 @@ github::calculate_total_modifications() {
         if [ -z "$file_to_ignore" ]; then
           continue
         fi
-        if [[ "$(jq::base64 '.filename')" == $file_to_ignore ]]; then
+        if [[ "$(jq::base64 '.filename')" =~ $file_to_ignore ]]; then
           ignore_file=1
         fi
       done
