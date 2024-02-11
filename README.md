@@ -51,7 +51,7 @@ jobs:
             This PR exceeds the recommended size of 1000 lines.
             Please make sure you are NOT addressing multiple issues with one PR.
             Note this PR might be rejected due to its size.
-          github_api_url: 'api.github.com'
+          github_api_url: 'https://api.github.com'
           files_to_ignore: ''
 ```
 
