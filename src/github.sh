@@ -6,6 +6,7 @@ github::calculate_total_modifications() {
   local -r pr_number="${1}"
   local -r files_to_ignore="${2}"
   local -r ignore_line_deletions="${3}"
+  local -r changed_file_weight="${4:-0}"
 
   local additions=0
   local deletions=0
@@ -18,6 +19,8 @@ github::calculate_total_modifications() {
     if [ "$ignore_line_deletions" != "true" ]; then
       ((deletions += $(echo "$body" | jq '.deletions')))
     fi
+    changed_files=$(echo "$body" | jq '.changed_files')
+    echo $((additions + deletions + (changed_files * changed_file_weight)))
   else
     local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number/files?per_page=100")
 
