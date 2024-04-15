@@ -5,7 +5,7 @@ GITHUB_API_HEADER="Accept: application/vnd.github.v3+json"
 github::calculate_total_modifications() {
   local -r pr_number="${1}"
   local -r files_to_ignore="${2}"
-  local -r ignore_file_deletions="${3}"
+  local -r ignore_line_deletions="${3}"
 
   local additions=0
   local deletions=0
@@ -15,7 +15,7 @@ github::calculate_total_modifications() {
 
     additions=$(echo "$body" | jq '.additions')
 
-    if [ "$ignore_file_deletions" != "true" ]; then
+    if [ "$ignore_line_deletions" != "true" ]; then
       ((deletions += $(echo "$body" | jq '.deletions')))
     fi
   else
@@ -40,7 +40,7 @@ github::calculate_total_modifications() {
       if [ "$ignore" = false ]; then
         ((additions += $(_jq '.additions')))
 
-        if [ "$ignore_file_deletions" != "true" ]; then
+        if [ "$ignore_line_deletions" != "true" ]; then
           ((deletions += $(_jq '.deletions')))
         fi
       fi
