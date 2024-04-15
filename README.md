@@ -74,12 +74,12 @@ jobs:
 
 ### Example for `files_to_ignore`:
 ```yml
-files_to_ignore: 'package-lock.json *.lock'
+files_to_ignore: 'package-lock\.json .*\.lock'
 # OR
 files_to_ignore: |
-  "package-lock.json"
-  "*.lock"
-  "docs/*"
+  "package-lock\.json"
+  ".*\.lock"
+  "docs/.*"
 ```
 
 ## 🤔 Basic concepts or assumptions
