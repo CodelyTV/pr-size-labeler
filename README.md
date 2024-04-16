@@ -1,6 +1,6 @@
 <p align="center">
   <a href="http://codely.tv">
-    <img alt="CodelyTV logo" src="http://codely.tv/wp-content/uploads/2016/05/cropped-logo-codelyTV.png" width="192px" height="192px"/>
+    <img alt="CodelyTV logo" src="https://avatars.githubusercontent.com/u/14278228?s=192&v=4" width="192px" height="192px"/>
   </a>
 </p>
 
