@@ -6,11 +6,12 @@ github::calculate_total_modifications() {
   local -r pr_number="${1}"
   local -r files_to_ignore="${2}"
   local -r ignore_line_deletions="${3}"
+  local -r ignore_file_deletions="${4}"
 
   local additions=0
   local deletions=0
 
-  if [ -z "$files_to_ignore" ]; then
+  if [ -z "$files_to_ignore" ] && [ "$ignore_file_deletions" != "true" ]; then
     local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number")
 
     additions=$(echo "$body" | jq '.additions')
@@ -19,11 +20,17 @@ github::calculate_total_modifications() {
       ((deletions += $(echo "$body" | jq '.deletions')))
     fi
   else
+    # NOTE: this code is not resilient to changes w/ > 100 files as we're not paginating
     local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number/files?per_page=100")
 
     for file in $(echo "$body" | jq -r '.[] | @base64'); do
       filename=$(jq::base64 '.filename')
+      status=$(jq::base64 '.status')
       ignore=false
+
+      if [ "$ignore_file_deletions" == "true" ] && [ "$status" == "removed" ]; then
+        continue
+      fi
 
       for pattern in $files_to_ignore; do
         if [[ $filename == $pattern ]]; then

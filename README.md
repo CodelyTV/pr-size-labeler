@@ -72,6 +72,7 @@ jobs:
 | `github_api_url`        | No       | 'https://api.github.com' | URL for the GitHub API, can be changed for GitHub Enterprise Servers.                                                  |
 | `files_to_ignore`       | No       | ''                   | Files to ignore during PR size calculation. Supports newline or whitespace delimited list.                              |
 | `ignore_line_deletions` | No       | 'false'              | Whether to ignore lines which are deleted when calculating the PR size. If set to 'true', deleted lines will be ignored. |
+| `ignore_file_deletions` | No       | 'false'              | Whether to ignore completely deleted files when calculating the PR size. If set to 'true', deleted files will be ignored. |
 
 ### Example for `files_to_ignore`:
 ```yml
@@ -87,6 +88,7 @@ files_to_ignore: |
 
 - PR Size Labeler considers any line addition, deletion, or modification as a change.
 - A PR will be labeled as 'xl' if it exceeds the amount of changes defined in `l_max_size`.
+- `ignore_file_deletions` is distinct from `ignore_line_deletions` in that it only ignores files which are deleted completely.
 
 ## Contributing
 If you would like to help improve the project, please read the [contribution guidelines](https://github.com/CodelyTV/pr-size-labeler/blob/main/.github/CONTRIBUTIONS.md).
