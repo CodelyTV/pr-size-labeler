@@ -1,6 +1,6 @@
 <p align="center">
   <a href="http://codely.tv">
-    <img alt="CodelyTV logo" src="https://avatars.githubusercontent.com/u/14278228?s=192&v=4" width="192px" height="192px"/>
+    <img alt="CodelyTV logo" src="https://avatars.githubusercontent.com/u/14278228?s=48&v=4" />
   </a>
 </p>
 
