@@ -60,7 +60,7 @@ inputs:
     required: false
     default: ''
   ignore_line_deletions:
-    description: 'Ignore lines that are deleted, thereby only considering additions.'
+    description: 'Whether to ignore lines which are deleted when calculating the PR size. If set to 'true', deleted lines will be ignored.'
     required: false
     default: 'false'
 runs:
