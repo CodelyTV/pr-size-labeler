@@ -5,36 +5,44 @@ GITHUB_API_HEADER="Accept: application/vnd.github.v3+json"
 github::calculate_total_modifications() {
   local -r pr_number="${1}"
   local -r files_to_ignore="${2}"
+  local -r ignore_line_deletions="${3}"
+
+  local additions=0
+  local deletions=0
 
   if [ -z "$files_to_ignore" ]; then
     local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number")
 
-    local -r additions=$(echo "$body" | jq '.additions')
-    local -r deletions=$(echo "$body" | jq '.deletions')
+    additions=$(echo "$body" | jq '.additions')
 
-    echo $((additions + deletions))
+    if [ "$ignore_line_deletions" != "true" ]; then
+      ((deletions += $(echo "$body" | jq '.deletions')))
+    fi
   else
     local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number/files?per_page=100")
 
-    local changes=0
-
     for file in $(echo "$body" | jq -r '.[] | @base64'); do
-      local ignore_file=0
-      for file_to_ignore in $files_to_ignore; do
-        if [ -z "$file_to_ignore" ]; then
-          continue
-        fi
-        if [[ "$(jq::base64 '.filename')" == $file_to_ignore ]]; then
-          ignore_file=1
+      filename=$(jq::base64 '.filename')
+      ignore=false
+
+      for pattern in $files_to_ignore; do
+        if [[ $filename == $pattern ]]; then
+          ignore=true
+          break
         fi
       done
-      if [ $ignore_file -eq 0 ]; then
-        ((changes += $(jq::base64 '.changes')))
+
+      if [ "$ignore" = false ]; then
+        ((additions += $(jq::base64 '.additions')))
+
+        if [ "$ignore_line_deletions" != "true" ]; then
+          ((deletions += $(jq::base64 '.deletions')))
+        fi
       fi
     done
-
-    echo $changes
   fi
+
+  echo $((additions + deletions))
 }
 
 github::add_label_to_pr() {
@@ -47,7 +55,7 @@ github::add_label_to_pr() {
   local -r xl_label="${7}"
 
   local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number")
-  local labels=$(echo "$body" | jq .labels | jq -r ".[] | .name" | grep -e "$xs_label" -e "$s_label" -e "$m_label" -e "$l_label" -e "$xl_label" -v)
+  local labels=$(echo "$body" | jq .labels | jq -r ".[] | .name" | grep -w -e "$xs_label" -e "$s_label" -e "$m_label" -e "$l_label" -e "$xl_label" -v)
   labels=$(printf "%s\n%s" "$labels" "$label_to_add")
   local -r comma_separated_labels=$(github::format_labels "$labels")
 
