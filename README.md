@@ -88,6 +88,9 @@ files_to_ignore: |
 - PR Size Labeler considers any line addition, deletion, or modification as a change.
 - A PR will be labeled as 'xl' if it exceeds the amount of changes defined in `l_max_size`.
 
+## Contributing
+If you would like to help improve the project, please read the [contribution guidelines](https://github.com/CodelyTV/pr-size-labeler/blob/main/.github/CONTRIBUTIONS.md).
+
 ## ⚖️ License
 
 [MIT](LICENSE)
