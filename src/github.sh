@@ -22,15 +22,10 @@ github::calculate_total_modifications() {
     local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number/files?per_page=100")
 
     for file in $(echo "$body" | jq -r '.[] | @base64'); do
-      _jq() {
-        echo ${file} | base64 -d | jq -r ${1}
-      }
-
-      filename=$(_jq '.filename')
+      filename=$(jq::base64 '.filename')
       ignore=false
 
       for pattern in $files_to_ignore; do
-
         if [[ $filename == $pattern ]]; then
           ignore=true
           break
@@ -38,10 +33,10 @@ github::calculate_total_modifications() {
       done
 
       if [ "$ignore" = false ]; then
-        ((additions += $(_jq '.additions')))
+        ((additions += $(jq::base64 '.additions')))
 
         if [ "$ignore_line_deletions" != "true" ]; then
-          ((deletions += $(_jq '.deletions')))
+          ((deletions += $(jq::base64 '.deletions')))
         fi
       fi
     done
