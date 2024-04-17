@@ -28,7 +28,7 @@ github::calculate_total_modifications() {
       status=$(jq::base64 '.status')
       ignore=false
 
-      if [ "$ignore_file_deletions" == "true" ] && [ "$status" == "removed" ]; then
+      if [[ ( "$ignore_file_deletions" == "true" || "$ignore_line_deletions" == "true" ) && "$status" == "removed" ]]; then
         continue
       fi
 
