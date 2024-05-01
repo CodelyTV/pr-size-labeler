@@ -6,7 +6,7 @@ github::calculate_total_modifications() {
   local -r pr_number="${1}"
   local -r files_to_ignore="${2}"
   local -r ignore_line_deletions="${3}"
-  local -r changed_file_weight="${4:-0}"
+  local -r changed_file_weight="${4}"
 
   local additions=0
   local deletions=0
@@ -23,8 +23,9 @@ github::calculate_total_modifications() {
     echo $((additions + deletions + (changed_files * changed_file_weight)))
   else
     local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number/files?per_page=100")
-
+    fileCount=0
     for file in $(echo "$body" | jq -r '.[] | @base64'); do
+    fileCount=$((fileCount+1))
       filename=$(jq::base64 '.filename')
       ignore=false
 
@@ -44,8 +45,7 @@ github::calculate_total_modifications() {
       fi
     done
   fi
-
-  echo $((additions + deletions))
+  echo $((additions + deletions + (changed_files * changed_file_weight)))
 }
 
 github::add_label_to_pr() {

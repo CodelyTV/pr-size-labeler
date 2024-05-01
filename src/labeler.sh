@@ -15,7 +15,14 @@ labeler::label() {
   local -r pr_number=$(github_actions::get_pr_number)
   local -r total_modifications=$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$changed_file_weight")
 
-  log::message "Total modifications (additions + deletions + (changed files * $changed_file_weight)): $total_modifications"
+# if changed_file_weight is not null
+  if [ -z "$changed_file_weight" ]; then
+    log::message "Total modifications (additions + deletions): $total_modifications"
+  else
+    log::message "Taking changed files into account with a weight of $changed_file_weight"
+    log::message "Total modifications (additions + deletions + (changed files * $changed_file_weight)): $total_modifications"
+    local -r changed_file_weight="$changed_file_weight"
+  fi
   log::message "Ignoring files (if present): $files_to_ignore"
 
   local -r label_to_add=$(labeler::label_for "$total_modifications" "$@")
