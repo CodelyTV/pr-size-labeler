@@ -24,7 +24,10 @@
 
 ## 🚀 Usage
 
-Create a file named `labeler.yml` inside the `.github/workflows` directory and paste the following configuration:
+Create a file named `labeler.yml` inside the `.github/workflows` directory and paste the following configuration.
+
+> [!NOTE]
+> Take into account that PR Size Labeler considers any line addition, deletion, or modification as a change by default, but you can configure it with [optional arguments](https://github.com/CodelyTV/pr-size-labeler?tab=readme-ov-file#%EF%B8%8F-arguments) such as `files_to_ignore`, `ignore_file_deletions`, or even `ignore_line_deletions`.
 
 ```yml
 name: labeler
@@ -59,23 +62,24 @@ jobs:
 
 ## 🎛️ Arguments
 
-| Name                    | Required | Default Value        | Description                                                                                                             |
-|-------------------------|----------|----------------------|-------------------------------------------------------------------------------------------------------------------------|
-| `GITHUB_TOKEN`          | Yes      | Automatically supplied| GitHub token needed to interact with the repository.                                                                    |
-| `xs_label`              | No       | 'size/xs'            | Label for very small-sized PRs.                                                                                         |
-| `xs_max_size`           | No       | '10'                 | Maximum number of changes allowed for XS-sized PRs.                                                                    |
-| `s_label`               | No       | 'size/s'             | Label for small-sized PRs.                                                                                              |
-| `s_max_size`            | No       | '100'                | Maximum number of changes allowed for S-sized PRs.                                                                     |
-| `m_label`               | No       | 'size/m'             | Label for medium-sized PRs.                                                                                             |
-| `m_max_size`            | No       | '500'                | Maximum number of changes allowed for M-sized PRs.                                                                     |
-| `l_label`               | No       | 'size/l'             | Label for large-sized PRs.                                                                                              |
-| `l_max_size`            | No       | '1000'               | Maximum number of changes allowed for L-sized PRs.                                                                     |
-| `xl_label`              | No       | 'size/xl'            | Label for extra-large-sized PRs.                                                                                        |
-| `fail_if_xl`            | No       | 'false'              | Whether to fail the GitHub workflow if the PR size is 'XL' (blocks the merge).                                         |
-| `message_if_xl`         | No       | Custom message       | Message to display when a PR exceeds the 'XL' size limit.                                                              |
-| `github_api_url`        | No       | 'https://api.github.com' | URL for the GitHub API, can be changed for GitHub Enterprise Servers.                                                  |
-| `files_to_ignore`       | No       | ''                   | Files to ignore during PR size calculation. Supports newline or whitespace delimited list.                              |
-| `ignore_line_deletions` | No       | 'false'              | Whether to ignore lines which are deleted when calculating the PR size. If set to 'true', deleted lines will be ignored. |
+| Name                    | Required | Default Value        | Description                                                                                                               |
+|-------------------------|----------|----------------------|---------------------------------------------------------------------------------------------------------------------------|
+| `GITHUB_TOKEN`          | Yes      | Automatically supplied| GitHub token needed to interact with the repository.                                                                     |
+| `xs_label`              | No       | 'size/xs'            | Label for very small-sized PRs.                                                                                           |
+| `xs_max_size`           | No       | '10'                 | Maximum number of changes allowed for XS-sized PRs.                                                                       |
+| `s_label`               | No       | 'size/s'             | Label for small-sized PRs.                                                                                                |
+| `s_max_size`            | No       | '100'                | Maximum number of changes allowed for S-sized PRs.                                                                        |
+| `m_label`               | No       | 'size/m'             | Label for medium-sized PRs.                                                                                               |
+| `m_max_size`            | No       | '500'                | Maximum number of changes allowed for M-sized PRs.                                                                        |
+| `l_label`               | No       | 'size/l'             | Label for large-sized PRs.                                                                                                |
+| `l_max_size`            | No       | '1000'               | Maximum number of changes allowed for L-sized PRs.                                                                        |
+| `xl_label`              | No       | 'size/xl'            | Label for extra-large-sized PRs. A PR will be labeled as 'xl' if it exceeds the amount of changes defined in `l_max_size` |
+| `fail_if_xl`            | No       | 'false'              | Whether to fail the GitHub workflow if the PR size is 'XL' (blocks the merge).                                            |
+| `message_if_xl`         | No       | Custom message       | Message to display when a PR exceeds the 'XL' size limit.                                                                 |
+| `github_api_url`        | No       | 'https://api.github.com' | URL for the GitHub API, can be changed for GitHub Enterprise Servers.                                                 |
+| `files_to_ignore`       | No       | ''                   | Files to ignore during PR size calculation. Supports newline or whitespace delimited list.                                |
+| `ignore_line_deletions` | No       | 'false'              | Whether to ignore lines which are deleted when calculating the PR size. If set to 'true', deleted lines will be ignored.  |
+| `ignore_file_deletions` | No       | 'false'              | Whether to ignore completely deleted files when calculating the PR size. If set to 'true', deleted files will be ignored. Distinct from `ignore_line_deletions` in that it only ignores files which are deleted completely. If `ignore_line_deletions` is used then using `ignore_file_deletions` is redundant.            |
 
 ### Example for `files_to_ignore`:
 ```yml
@@ -86,11 +90,6 @@ files_to_ignore: |
   "*.lock"
   "docs/*"
 ```
-
-## 🤔 Basic concepts or assumptions
-
-- PR Size Labeler considers any line addition, deletion, or modification as a change.
-- A PR will be labeled as 'xl' if it exceeds the amount of changes defined in `l_max_size`.
 
 ## Contributing
 If you would like to help improve the project, please read the [contribution guidelines](https://github.com/CodelyTV/pr-size-labeler/blob/main/.github/CONTRIBUTIONS.md).
