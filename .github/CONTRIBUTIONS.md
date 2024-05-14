@@ -48,9 +48,9 @@ To contribute to this project, please follow these steps:
 1. Fork the repository and create a new branch for your feature or bug fix.
 2. Make your changes in the new branch, ensuring that your code follows the project's coding style and conventions.
 3. Write clear and concise commit messages that describe the purpose of your changes.
-4. Push your changes to your forked repository.
-5. Submit a pull request to the main repository, clearly explaining the purpose and scope of your changes by populating the pull request template.
-6. Update the unit tests if the change requires testing, ie not a documentation change.
+4. Update the unit tests if the change requires testing, ie not a documentation change.
+5. Push your changes to your forked repository.
+6. Submit a pull request to the main repository, clearly explaining the purpose and scope of your changes by populating the pull request template.
 7. Engage in the discussion and address any feedback or questions raised during the code review process.
 
 We will review your contribution and provide feedback as soon as possible. Once your changes have been approved, they will be merged into the main branch.
