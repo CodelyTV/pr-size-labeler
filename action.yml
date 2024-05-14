@@ -63,6 +63,10 @@ inputs:
     description: 'Whether to ignore lines which are deleted when calculating the PR size. If set to "true", deleted lines will be ignored.'
     required: false
     default: 'false'
+  ignore_file_deletions:
+    description: 'Whether to ignore files which are deleted when calculating the PR size. If set to "true", deleted files will be ignored.'
+    required: false
+    default: 'false'
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -82,6 +86,7 @@ runs:
     - --message_if_xl="${{ inputs.message_if_xl }}"
     - --files_to_ignore=${{ inputs.files_to_ignore }}
     - --ignore_line_deletions=${{ inputs.ignore_line_deletions }}
+    - --ignore_file_deletions=${{ inputs.ignore_file_deletions }}
 branding:
   icon: 'tag'
   color: 'green'
