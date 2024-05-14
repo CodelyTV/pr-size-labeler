@@ -43,7 +43,7 @@ Please make sure to write appropriate tests for any new features or bug fixes yo
 
 ## Contribution Process
 
-To contribute to this project, please follow these steps:
+To contribute to this project, you can follow the common steps you would follow to contribute to any other Open Source project, that is:
 
 1. Fork the repository and create a new branch for your feature or bug fix.
 2. Make your changes in the new branch, ensuring that your code follows the project's coding style and conventions.
