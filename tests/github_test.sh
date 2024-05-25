@@ -13,7 +13,7 @@ ignore_file_deletions='false'
 function test_should_count_changes() {
   mock curl cat ./tests/fixtures/pull_request_api
 
-  assert_match_snapshot "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
+  assert_equals 174 "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
 }
 
 function test_should_count_changes_ignore_line_deletions() {
@@ -21,7 +21,7 @@ function test_should_count_changes_ignore_line_deletions() {
 
   mock curl cat ./tests/fixtures/pull_request_api
 
-  assert_match_snapshot "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
+  assert_equals 173 "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
 }
 
 # NOTE: when `files_to_ignore` or `ignore_file_deletions` is set, we have to invoke the PR files API and iterate each file
@@ -31,7 +31,7 @@ function test_should_count_changes_ignore_file_deletions() {
 
   mock curl cat ./tests/fixtures/pull_request_files_api
 
-  assert_match_snapshot "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
+  assert_equals 2779 "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
 }
 
 function test_should_ignore_files_with_glob() {
@@ -39,7 +39,7 @@ function test_should_ignore_files_with_glob() {
 
   mock curl cat ./tests/fixtures/pull_request_files_api
 
-  assert_match_snapshot "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
+  assert_equals 517 "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
 }
 
 function test_should_ignore_files_with_glob_ignore_line_deletions() {
@@ -48,7 +48,7 @@ function test_should_ignore_files_with_glob_ignore_line_deletions() {
 
   mock curl cat ./tests/fixtures/pull_request_files_api
 
-  assert_match_snapshot "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
+  assert_equals 224 "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
 }
 
 function test_should_ignore_files_with_glob_ignore_file_deletions() {
@@ -57,5 +57,5 @@ function test_should_ignore_files_with_glob_ignore_file_deletions() {
 
   mock curl cat ./tests/fixtures/pull_request_files_api
 
-  assert_match_snapshot "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
+  assert_equals 394 "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
 }
