@@ -1,5 +1,6 @@
-FROM alpine:3.15
+FROM alpine:3.19
 
+RUN sudo update-ca-certificates
 RUN apk add --no-cache bash curl jq wget
 RUN mkdir -p "$HOME/bin" && \
     cd "$HOME/bin" && \
