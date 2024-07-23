@@ -30,7 +30,7 @@ labeler::label() {
     fi
 
     if [ "$fail_if_xl" == "true" ]; then
-      echoerr "Pr is xl, please, short this!!"
+      echoerr "PR is xl, please, shorten this!"
       exit 1
     fi
   fi
