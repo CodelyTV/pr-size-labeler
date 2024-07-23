@@ -85,7 +85,8 @@ jobs:
 | `ignore_line_deletions` | No       | 'false'              | Whether to ignore lines which are deleted when calculating the PR size. If set to 'true', deleted lines will be ignored.  |
 | `ignore_file_deletions` | No       | 'false'              | Whether to ignore completely deleted files when calculating the PR size. If set to 'true', deleted files will be ignored. Distinct from `ignore_line_deletions` in that it only ignores files which are deleted completely. If `ignore_line_deletions` is used then using `ignore_file_deletions` is redundant.            |
 
-### Example for `files_to_ignore`:
+### Example for `files_to_ignore`
+
 ```yml
 files_to_ignore: 'package-lock.json *.lock'
 # OR
@@ -96,6 +97,7 @@ files_to_ignore: |
 ```
 
 ## Contributing
+
 If you would like to help improve the project, please read the [contribution guidelines](https://github.com/CodelyTV/pr-size-labeler/blob/main/.github/CONTRIBUTIONS.md).
 
 ## ⚖️ License
