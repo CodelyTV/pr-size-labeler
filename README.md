@@ -36,6 +36,10 @@ on: [pull_request]
 
 jobs:
   labeler:
+    permissions:
+        pull-requests: write
+        contents: read
+        issues: write
     runs-on: ubuntu-latest
     name: Label the PR size
     steps:
