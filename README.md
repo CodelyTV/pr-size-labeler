@@ -64,7 +64,8 @@ jobs:
           files_to_ignore: ''
 ```
 
-**note**: When using forks and where you don't want any PR to be able to execute code, replace `on: [pull_request]` with `on: [pull_request_target]` (see [GitHub docs](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target)).
+> [!TIP]
+> Replace `on: [pull_request]` with `on: [pull_request_target]` when using forks and when you don't want any PR to be able to execute code ([more info: GitHub docs](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target)).
 
 ## 🎛️ Arguments
 
