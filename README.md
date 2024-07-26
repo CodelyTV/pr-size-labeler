@@ -36,6 +36,10 @@ on: [pull_request]
 
 jobs:
   labeler:
+    permissions:
+        pull-requests: write
+        contents: read
+        issues: write
     runs-on: ubuntu-latest
     name: Label the PR size
     steps:
@@ -60,6 +64,9 @@ jobs:
           files_to_ignore: ''
 ```
 
+> [!TIP]
+> Replace `on: [pull_request]` with `on: [pull_request_target]` when using forks and when you don't want any PR to be able to execute code ([more info: GitHub docs](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target)).
+
 ## 🎛️ Arguments
 
 | Name                    | Required | Default Value        | Description                                                                                                               |
@@ -81,7 +88,8 @@ jobs:
 | `ignore_line_deletions` | No       | 'false'              | Whether to ignore lines which are deleted when calculating the PR size. If set to 'true', deleted lines will be ignored.  |
 | `ignore_file_deletions` | No       | 'false'              | Whether to ignore completely deleted files when calculating the PR size. If set to 'true', deleted files will be ignored. Distinct from `ignore_line_deletions` in that it only ignores files which are deleted completely. If `ignore_line_deletions` is used then using `ignore_file_deletions` is redundant.            |
 
-### Example for `files_to_ignore`:
+### Example for `files_to_ignore`
+
 ```yml
 files_to_ignore: 'package-lock.json *.lock'
 # OR
@@ -92,6 +100,7 @@ files_to_ignore: |
 ```
 
 ## Contributing
+
 If you would like to help improve the project, please read the [contribution guidelines](https://github.com/CodelyTV/pr-size-labeler/blob/main/.github/CONTRIBUTIONS.md).
 
 ## ⚖️ License
