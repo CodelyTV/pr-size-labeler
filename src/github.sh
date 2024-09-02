@@ -101,6 +101,6 @@ github::comment() {
     -H "$GITHUB_API_HEADER" \
     -X POST \
     -H "Content-Type: application/json" \
-    -d "{\"body\":$comment}" \
+    -d "{\"body\":\"$comment\"}" \
     "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/issues/$pr_number/comments"
 }
