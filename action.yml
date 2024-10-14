@@ -2,8 +2,9 @@ name: 'Pull Request size labeler'
 description: 'Label a PR based on the amount of changes'
 inputs:
   GITHUB_TOKEN:
-    description: 'GitHub token'
-    required: true
+    description: 'GitHub token needed to interact with the repository'
+    required: false
+    default: ${{ github.token }}
   xs_label:
     description: 'Label for xs PR'
     required: false
