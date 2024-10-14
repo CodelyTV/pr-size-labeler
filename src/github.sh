@@ -52,6 +52,19 @@ github::calculate_total_modifications() {
   echo $((additions + deletions))
 }
 
+github::has_label() {
+  local -r pr_number="${1}"
+  local -r label_to_check="${2}"
+
+  local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/issues/$pr_number/labels")
+  for label in $(echo "$body" | jq -r '.[] | @base64'); do
+    if [ "$(echo ${label} | base64 -d | jq -r '.name')" = "$label_to_check" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 github::add_label_to_pr() {
   local -r pr_number="${1}"
   local -r label_to_add="${2}"
