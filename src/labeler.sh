@@ -25,7 +25,7 @@ labeler::label() {
   github::add_label_to_pr "$pr_number" "$label_to_add" "$xs_label" "$s_label" "$m_label" "$l_label" "$xl_label"
 
   if [ "$label_to_add" == "$xl_label" ]; then
-    if [ -n "$message_if_xl" ]; then
+    if [ -n "$message_if_xl" ] && ! github::has_label "$pr_number" "$label_to_add"; then
       github::comment "$message_if_xl"
     fi
 
