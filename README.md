@@ -45,7 +45,6 @@ jobs:
     steps:
       - uses: codelytv/pr-size-labeler@v1
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           xs_label: 'size/xs'
           xs_max_size: '10'
           s_label: 'size/s'
@@ -71,7 +70,7 @@ jobs:
 
 | Name                    | Required | Default Value        | Description                                                                                                               |
 |-------------------------|----------|----------------------|---------------------------------------------------------------------------------------------------------------------------|
-| `GITHUB_TOKEN`          | Yes      | Automatically supplied| GitHub token needed to interact with the repository.                                                                     |
+| `GITHUB_TOKEN`          | No       | Automatically supplied| GitHub token needed to interact with the repository.                                                                     |
 | `xs_label`              | No       | 'size/xs'            | Label for very small-sized PRs.                                                                                           |
 | `xs_max_size`           | No       | '10'                 | Maximum number of changes allowed for XS-sized PRs.                                                                       |
 | `s_label`               | No       | 'size/s'             | Label for small-sized PRs.                                                                                                |
