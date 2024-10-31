@@ -84,10 +84,10 @@ github::add_label_to_pr() {
   curl -sSL \
     -H "Authorization: token $GITHUB_TOKEN" \
     -H "$GITHUB_API_HEADER" \
-    -X PATCH \
+    -X POST \
     -H "Content-Type: application/json" \
     -d "{\"labels\":[$comma_separated_labels]}" \
-    "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/issues/$pr_number" >/dev/null
+    "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/issues/$pr_number/labels" >/dev/null
 }
 
 github::format_labels() {
