@@ -1,4 +1,4 @@
-FROM alpine:3.15
+FROM paymentology.jfrog.io/pt-docker-virtual-thirdparty/alpine:3.15
 
 RUN apk add --no-cache bash curl jq wget
 RUN mkdir -p "$HOME/bin" && \
