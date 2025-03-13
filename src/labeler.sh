@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# --- Existing Functions ---
+
 labeler::label() {
   local -r xs_label="${1}"
   local -r s_label="${3}"
@@ -20,10 +22,11 @@ labeler::label() {
 
   local -r label_to_add=$(labeler::label_for "$total_modifications" "$@")
 
-  log::message "Labeling pull request with $label_to_add"
+  log::message "Labeling pull request with size label: $label_to_add"
 
   github::add_label_to_pr "$pr_number" "$label_to_add" "$xs_label" "$s_label" "$m_label" "$l_label" "$xl_label"
 
+  # If the PR size label is "xl", handle the extra messages or failure as before.
   if [ "$label_to_add" == "$xl_label" ]; then
     if [ -n "$message_if_xl" ] && ! github::has_label "$pr_number" "$label_to_add"; then
       github::comment "$message_if_xl"
@@ -34,6 +37,10 @@ labeler::label() {
       exit 1
     fi
   fi
+
+  # ---- Add Language Labeling ----
+  log::message "Detecting languages in changed files..."
+  labeler::add_language_labels "$pr_number"
 }
 
 labeler::label_for() {
@@ -61,4 +68,78 @@ labeler::label_for() {
   fi
 
   echo "$label"
+}
+
+# --- New Functions for Language Labeling ---
+
+# This helper adds a label to the PR.
+# If you already have a similar function in your repository, you can replace this.
+github::add_label() {
+  local pr_number="$1"
+  local label="$2"
+  curl -s -X POST \
+    -H "Authorization: token ${GITHUB_TOKEN}" \
+    -H "Content-Type: application/json" \
+    --data "{\"labels\": [\"${label}\"]}" \
+    "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${pr_number}/labels" > /dev/null
+}
+
+# This function fetches changed files, determines languages from file extensions,
+# and adds corresponding language labels (prefixed with "pr: lang/").
+labeler::add_language_labels() {
+  local pr_number="$1"
+
+  # Fetch changed files for the PR.
+  local files_json
+  files_json=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" \
+    "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${pr_number}/files")
+
+  # Use an associative array to avoid duplicate labels.
+  declare -A languages
+
+  # Loop over each file and determine language based on file extension.
+  for file in $(echo "$files_json" | jq -r '.[].filename'); do
+    ext="${file##*.}"
+    case "$ext" in
+      js|jsx)
+        languages["pr: lang/javascript"]=1
+        ;;
+      ts|tsx)
+        languages["pr: lang/typescript"]=1
+        ;;
+      py)
+        languages["pr: lang/python"]=1
+        ;;
+      rb)
+        languages["pr: lang/ruby"]=1
+        ;;
+      java)
+        languages["pr: lang/java"]=1
+        ;;
+      go)
+        languages["pr: lang/go"]=1
+        ;;
+      cs)
+        languages["pr: lang/csharp"]=1
+        ;;
+      cpp)
+        languages["pr: lang/cpp"]=1
+        ;;
+      c)
+        languages["pr: lang/c"]=1
+        ;;
+      php)
+        languages["pr: lang/php"]=1
+        ;;
+      *)
+        # Ignore other extensions or add a generic label if desired.
+        ;;
+    esac
+  done
+
+  # Add each detected language label to the PR.
+  for lang_label in "${!languages[@]}"; do
+    log::message "Adding language label: ${lang_label}"
+    github::add_label "$pr_number" "$lang_label"
+  done
 }
