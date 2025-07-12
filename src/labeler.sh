@@ -19,13 +19,14 @@ labeler::label() {
   log::message "Ignoring files (if present): $files_to_ignore"
 
   local -r label_to_add=$(labeler::label_for "$total_modifications" "$@")
+  local -r had_label=$(github::has_label "$pr_number" "$label_to_add")
 
   log::message "Labeling pull request with $label_to_add"
 
   github::add_label_to_pr "$pr_number" "$label_to_add" "$xs_label" "$s_label" "$m_label" "$l_label" "$xl_label"
 
   if [ "$label_to_add" == "$xl_label" ]; then
-    if [ -n "$message_if_xl" ] && ! github::has_label "$pr_number" "$label_to_add"; then
+    if [ -n "$message_if_xl" ] && [ "$had_label" -eq 0 ]; then
       github::comment "$message_if_xl"
     fi
 

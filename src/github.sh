@@ -59,9 +59,11 @@ github::has_label() {
   local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/issues/$pr_number/labels")
   for label in $(echo "$body" | jq -r '.[] | @base64'); do
     if [ "$(echo ${label} | base64 -d | jq -r '.name')" = "$label_to_check" ]; then
+      echo "1"
       return 0
     fi
   done
+  echo "0"
   return 1
 }
 
