@@ -1,0 +1,29 @@
+.env
+  s_6d4ff0c78098d1::t_219bf6054cd042 1
+.github/CONTRIBUTIONS.md
+  s_6d4ff0c78098d1::t_4407b867afe880 28
+.github/dependabot.yml
+  s_6d4ff0c78098d1::t_af695d7b29b133 1-24
+.github/workflows/labeler.yml
+  s_6d4ff0c78098d1::t_95d20aef7212c5 10
+.github/workflows/test.yml
+  s_6d4ff0c78098d1::t_8a64672712f561 13
+install-dependencies.sh
+  s_6d4ff0c78098d1::t_bcb25ebf91534a 2,5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "a2c7810023328fe2bc5f1385627643e127197db3",
+  "prompts": {},
+  "sessions": {
+    "s_6d4ff0c78098d1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0e8d5-f2a0-7a50-97b9-98edfcba8f2b",
+        "model": "gpt-6-sol"
+      },
+      "human_author": "Javier Ferrer González <javier.ferrer@codely.com>"
+    }
+  }
+}
