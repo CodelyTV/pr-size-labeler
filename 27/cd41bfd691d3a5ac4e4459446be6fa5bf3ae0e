@@ -1,0 +1,23 @@
+.env
+  s_6d4ff0c78098d1::t_c7d890d87c9954 1
+.github/CONTRIBUTIONS.md
+  s_6d4ff0c78098d1::t_d4fe53d173e155 28
+tests/github_test.sh
+  s_6d4ff0c78098d1::t_89282f3c363c16 14,22,32,40,49,58,61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "27cd41bfd691d3a5ac4e4459446be6fa5bf3ae0e",
+  "prompts": {},
+  "sessions": {
+    "s_6d4ff0c78098d1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0e8d5-f2a0-7a50-97b9-98edfcba8f2b",
+        "model": "unknown"
+      },
+      "human_author": "Javier Ferrer González <javier.ferrer@codely.com>"
+    }
+  }
+}
