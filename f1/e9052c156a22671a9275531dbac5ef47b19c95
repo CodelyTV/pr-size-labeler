@@ -1,0 +1,21 @@
+.github/workflows/labeler.yml
+  s_6d4ff0c78098d1::t_709c905fd2fa2e 10
+.github/workflows/test.yml
+  s_6d4ff0c78098d1::t_c0c1d781cc7f72 13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "f1e9052c156a22671a9275531dbac5ef47b19c95",
+  "prompts": {},
+  "sessions": {
+    "s_6d4ff0c78098d1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0e8d5-f2a0-7a50-97b9-98edfcba8f2b",
+        "model": "unknown"
+      },
+      "human_author": "Javier Ferrer González <javier.ferrer@codely.com>"
+    }
+  }
+}
