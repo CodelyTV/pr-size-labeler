@@ -113,35 +113,64 @@ github::add_label_to_pr() {
 
   local body
   body=$(github::curl -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number") || return 1
-  local labels=$(echo "$body" | jq .labels | jq -r ".[] | .name" | grep -w -e "$xs_label" -e "$s_label" -e "$m_label" -e "$l_label" -e "$xl_label" -v)
-  labels=$(printf "%s\n%s" "$labels" "$label_to_add")
-  local -r comma_separated_labels=$(github::format_labels "$labels")
+  local stale_labels
+  stale_labels=$(github::find_stale_size_labels "$body" "$label_to_add" "$xs_label" "$s_label" "$m_label" "$l_label" "$xl_label") || return 1
 
-  log::message "Final labels: $comma_separated_labels"
+  log::message "Adding size label: $label_to_add"
+  github::add_label "$pr_number" "$label_to_add" || return 1
+
+  if [ -z "$stale_labels" ]; then
+    return 0
+  fi
+
+  local stale_label
+  while IFS= read -r stale_label; do
+    log::message "Removing size label: $stale_label"
+    github::remove_label "$pr_number" "$stale_label" || return 1
+  done <<< "$stale_labels"
+}
+
+github::find_stale_size_labels() {
+  local -r body="$1"
+  local -r current_label="$2"
+  local -r xs_label="$3"
+  local -r s_label="$4"
+  local -r m_label="$5"
+  local -r l_label="$6"
+  local -r xl_label="$7"
+
+  echo "$body" | jq -r \
+    --arg current "$current_label" \
+    --arg xs "$xs_label" --arg s "$s_label" --arg m "$m_label" --arg l "$l_label" --arg xl "$xl_label" \
+    '.labels[].name | select(. != $current and (. == $xs or . == $s or . == $m or . == $l or . == $xl))'
+}
+
+github::add_label() {
+  local -r pr_number="$1"
+  local -r label="$2"
+  local label_json
+  label_json=$(jq -nc --arg label "$label" '{labels: [$label]}') || return 1
 
   github::curl \
     -H "Authorization: token $GITHUB_TOKEN" \
     -H "$GITHUB_API_HEADER" \
-    -X PUT \
+    -X POST \
     -H "Content-Type: application/json" \
-    -d "{\"labels\":[$comma_separated_labels]}" \
-    "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/issues/$pr_number/labels" >/dev/null
+    -d "$label_json" \
+    "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/issues/$pr_number/labels" >/dev/null || return 1
 }
 
-github::format_labels() {
-  SAVEIFS=$IFS
-  IFS=$'\n'
-  local -r labels=($@)
-  IFS=$SAVEIFS
-  quoted_labels=()
+github::remove_label() {
+  local -r pr_number="$1"
+  local -r label="$2"
+  local encoded_label
+  encoded_label=$(jq -nr --arg label "$label" '$label | @uri') || return 1
 
-  for ((i = 0; i < ${#labels[@]}; i++)); do
-    #    echo "Label $i: ${labels[$i]}"
-    label="${labels[$i]}"
-    quoted_labels+=("$(str::quote "$label")")
-  done
-
-  coll::join_by "," "${quoted_labels[@]/#/}"
+  github::curl \
+    -H "Authorization: token $GITHUB_TOKEN" \
+    -H "$GITHUB_API_HEADER" \
+    -X DELETE \
+    "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/issues/$pr_number/labels/$encoded_label" >/dev/null || return 1
 }
 
 github::comment() {

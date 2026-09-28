@@ -3,6 +3,13 @@
 function set_up() {
   source ./src/misc.sh
   source ./src/github.sh
+  label_requests=''
+}
+
+function tear_down() {
+  if [ -n "$label_requests" ]; then
+    rm -f "$label_requests"
+  fi
 }
 
 function mock_pull_request_api() {
@@ -20,8 +27,17 @@ function mock_not_found_response() {
 
 function mock_label_write_denied() {
   case "$*" in
-    *'-X PUT'*) mock_not_found_response ;;
+    *'-X POST'*) mock_not_found_response ;;
     *) mock_pull_request_api ;;
+  esac
+}
+
+function mock_label_api() {
+  case "$*" in
+    *"/pulls/$pr_number") echo "$label_snapshot" ;;
+    *'-X POST'*) echo "POST $*" >> "$label_requests" ;;
+    *'-X DELETE'*) echo "DELETE $*" >> "$label_requests" ;;
+    *) return 1 ;;
   esac
 }
 
@@ -117,4 +133,33 @@ function test_should_report_permission_error_on_label_write() {
 
   assert_equals 1 "$status"
   assert_contains 'pull-requests: write' "$output"
+}
+
+function test_should_preserve_labels_added_after_reading_the_pr() {
+  label_requests=$(mktemp)
+  # The snapshot cannot include labels added by another workflow after this read.
+  label_snapshot='{"labels":[{"name":"size/old label"},{"name":"size/m"},{"name":"team/needs review"}]}'
+  old_label='size/old label'
+  bashunit::mock curl mock_label_api
+
+  local output
+  output=$(github::add_label_to_pr "$pr_number" 'size/"new"' 'size/xs' "$old_label" 'size/m' 'size/l' 'size/"new"')
+
+  assert_contains 'Removing size label: size/old label' "$output"
+  assert_contains 'Removing size label: size/m' "$output"
+  assert_equals $'POST\nDELETE\nDELETE' "$(cut -d ' ' -f 1 "$label_requests")"
+  assert_contains '{"labels":["size/\"new\""]}' "$(cat "$label_requests")"
+  assert_contains '/labels/size%2Fold%20label' "$(cat "$label_requests")"
+  assert_contains '/labels/size%2Fm' "$(cat "$label_requests")"
+}
+
+function test_should_not_remove_the_current_size_label() {
+  label_requests=$(mktemp)
+  label_snapshot='{"labels":[{"name":"size/xl"},{"name":"team/needs review"}]}'
+  bashunit::mock curl mock_label_api
+
+  github::add_label_to_pr "$pr_number" 'size/xl' 'size/xs' 'size/s' 'size/m' 'size/l' 'size/xl'
+
+  assert_equals 'POST' "$(cut -d ' ' -f 1 "$label_requests")"
+  assert_contains '{"labels":["size/xl"]}' "$(cat "$label_requests")"
 }
