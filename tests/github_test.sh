@@ -14,7 +14,15 @@ function mock_pull_request_files_api() {
 }
 
 function mock_not_found_response() {
-  echo '{"message": "Not Found"}'
+  echo 'curl: (22) HTTP 403' >&2
+  return 22
+}
+
+function mock_label_write_denied() {
+  case "$*" in
+    *'-X PUT'*) mock_not_found_response ;;
+    *) mock_pull_request_api ;;
+  esac
 }
 
 pr_number=123
@@ -87,10 +95,26 @@ function test_should_count_changes_across_pages() {
   assert_equals $((200 + 2779)) "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
 }
 
-function test_should_count_nothing_on_error_response() {
+function test_should_report_permission_error() {
   ignore_file_deletions='true'
 
   bashunit::mock curl mock_not_found_response
 
-  assert_equals 0 "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
+  local output status
+  output=$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions" 2>&1)
+  status=$?
+
+  assert_equals 1 "$status"
+  assert_contains 'pull-requests: write' "$output"
+}
+
+function test_should_report_permission_error_on_label_write() {
+  bashunit::mock curl mock_label_write_denied
+
+  local output status
+  output=$(github::add_label_to_pr "$pr_number" 'size/xs' 'size/xs' 'size/s' 'size/m' 'size/l' 'size/xl' 2>&1)
+  status=$?
+
+  assert_equals 1 "$status"
+  assert_contains 'pull-requests: write' "$output"
 }

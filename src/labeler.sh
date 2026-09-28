@@ -13,24 +13,30 @@ labeler::label() {
   local -r ignore_file_deletions="${14}"
 
   local -r pr_number=$(github_actions::get_pr_number)
-  local -r total_modifications=$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")
+  local calculated_modifications
+  calculated_modifications=$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions") || return 1
+  local -r total_modifications="$calculated_modifications"
 
   log::message "Total modifications (additions + deletions): $total_modifications"
   log::message "Ignoring files (if present): $files_to_ignore"
 
   local -r label_to_add=$(labeler::label_for "$total_modifications" "$@")
   local should_comment_if_xl=false
-  if [ "$label_to_add" == "$xl_label" ] && [ -n "$message_if_xl" ] && ! github::has_label "$pr_number" "$label_to_add"; then
-    should_comment_if_xl=true
+  if [ "$label_to_add" == "$xl_label" ] && [ -n "$message_if_xl" ]; then
+    github::has_label "$pr_number" "$label_to_add" || {
+      local lookup_status=$?
+      [ "$lookup_status" -eq 1 ] || return 1
+      should_comment_if_xl=true
+    }
   fi
 
   log::message "Labeling pull request with $label_to_add"
 
-  github::add_label_to_pr "$pr_number" "$label_to_add" "$xs_label" "$s_label" "$m_label" "$l_label" "$xl_label"
+  github::add_label_to_pr "$pr_number" "$label_to_add" "$xs_label" "$s_label" "$m_label" "$l_label" "$xl_label" || return 1
 
   if [ "$label_to_add" == "$xl_label" ]; then
     if [ "$should_comment_if_xl" == "true" ]; then
-      github::comment "$message_if_xl"
+      github::comment "$message_if_xl" || return 1
     fi
 
     if [ "$fail_if_xl" == "true" ]; then
