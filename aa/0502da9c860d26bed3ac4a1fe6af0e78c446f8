@@ -1,0 +1,19 @@
+tests/github_test.sh
+  s_6d4ff0c78098d1::t_ad79e57f55b62a 8-15,22,30,40,48,57,66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "aa0502da9c860d26bed3ac4a1fe6af0e78c446f8",
+  "prompts": {},
+  "sessions": {
+    "s_6d4ff0c78098d1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0e8d5-f2a0-7a50-97b9-98edfcba8f2b",
+        "model": "unknown"
+      },
+      "human_author": "Javier Ferrer González <javier.ferrer@codely.com>"
+    }
+  }
+}
