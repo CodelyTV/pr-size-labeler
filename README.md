@@ -83,17 +83,26 @@ jobs:
 | `fail_if_xl`            | No       | 'false'              | Whether to fail the GitHub workflow if the PR size is 'XL' (blocks the merge).                                            |
 | `message_if_xl`         | No       | Custom message       | Message to display when a PR exceeds the 'XL' size limit.                                                                 |
 | `github_api_url`        | No       | 'https://api.github.com' | URL for the GitHub API, can be changed for GitHub Enterprise Servers.                                                 |
-| `files_to_ignore`       | No       | ''                   | Files to ignore during PR size calculation. Supports newline or whitespace delimited list.                                |
+| `files_to_ignore`       | No       | ''                   | Whitespace or newline separated Bash glob patterns matched against full repository-relative file paths.                  |
 | `ignore_line_deletions` | No       | 'false'              | Whether to ignore lines which are deleted when calculating the PR size. If set to 'true', deleted lines will be ignored.  |
 | `ignore_file_deletions` | No       | 'false'              | Whether to ignore completely deleted files when calculating the PR size. If set to 'true', deleted files will be ignored. Distinct from `ignore_line_deletions` in that it only ignores files which are deleted completely. If `ignore_line_deletions` is used then using `ignore_file_deletions` is redundant.            |
 
 ### Example for `files_to_ignore`
 
+Patterns match the full path of each changed file relative to the repository root, not just its filename. For example, `package-lock.json` matches a file at the root, but not `apps/web/package-lock.json`. Add `*/package-lock.json` to match copies in subdirectories. Patterns use Bash glob syntax, not regular expressions.
+
+The shell may expand a wildcard against files in the workspace before the action compares paths. If you need to ignore a specific file reliably, list its full path explicitly, such as `apps/web/package-lock.json`.
+
 ```yml
-files_to_ignore: 'package-lock.json *.lock'
-# OR
+files_to_ignore: 'package-lock.json */package-lock.json'
+```
+
+The same patterns can be listed on separate lines. `*.lock` matches files ending in `.lock`, and `docs/*` matches files under `docs/`:
+
+```yml
 files_to_ignore: |
   "package-lock.json"
+  "*/package-lock.json"
   "*.lock"
   "docs/*"
 ```
