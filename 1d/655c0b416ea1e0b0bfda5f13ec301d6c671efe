@@ -1,0 +1,21 @@
+tests/github_test.sh
+  s_6d4ff0c78098d1::t_96e08837b9b8e6 20-27,105-132
+tests/labeler_test.sh
+  s_6d4ff0c78098d1::t_d366662437435e 1-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "1d655c0b416ea1e0b0bfda5f13ec301d6c671efe",
+  "prompts": {},
+  "sessions": {
+    "s_6d4ff0c78098d1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0e8d5-f2a0-7a50-97b9-98edfcba8f2b",
+        "model": "unknown"
+      },
+      "human_author": "Javier Ferrer González <javier.ferrer@codely.com>"
+    }
+  }
+}
