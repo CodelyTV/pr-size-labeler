@@ -25,7 +25,7 @@ While we don't aim to be overly strict, we appreciate your willingness to adhere
 
 ## Testing
 
-Tests are written using [bashunit](https://bashunit.typeddevs.com/).
+Tests are written using [bashunit](https://bashunit.com/).
 
 To install the vendor dependencies, run:
 
