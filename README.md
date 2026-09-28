@@ -38,8 +38,6 @@ jobs:
   labeler:
     permissions:
       pull-requests: write
-      contents: read
-      issues: write
     runs-on: ubuntu-latest
     name: Label the PR size
     steps:
@@ -62,6 +60,8 @@ jobs:
           github_api_url: 'https://api.github.com'
           files_to_ignore: ''
 ```
+
+The job needs `pull-requests: write` to read the PR and update its labels or post an XL comment.
 
 > [!TIP]
 > Replace `on: [pull_request]` with `on: [pull_request_target]` when using forks and when you don't want any PR to be able to execute code ([more info: GitHub docs](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target)).

@@ -2,6 +2,16 @@
 
 GITHUB_API_HEADER="Accept: application/vnd.github.v3+json"
 
+github::curl() {
+  curl -fsSL "$@" || {
+    echoerr "GitHub API request failed. If access was denied, add this to the job in your GitHub Actions workflow:"
+    echoerr "  permissions:"
+    echoerr "    pull-requests: write"
+    echoerr "For pull requests from forks, use pull_request_target to get a writable token."
+    return 1
+  }
+}
+
 github::calculate_total_modifications() {
   local -r pr_number="${1}"
   local -r files_to_ignore="${2}"
@@ -12,7 +22,8 @@ github::calculate_total_modifications() {
   local deletions=0
 
   if [ -z "$files_to_ignore" ] && [ "$ignore_file_deletions" != "true" ]; then
-    local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number")
+    local body
+    body=$(github::curl -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number") || return 1
 
     additions=$(echo "$body" | jq '.additions')
 
@@ -20,7 +31,9 @@ github::calculate_total_modifications() {
       ((deletions += $(echo "$body" | jq '.deletions')))
     fi
   else
-    for file in $(github::get_pr_files "$pr_number"); do
+    local files
+    files=$(github::get_pr_files "$pr_number") || return 1
+    for file in $files; do
       filename=$(jq::base64 '.filename')
       status=$(jq::base64 '.status')
       ignore=false
@@ -58,7 +71,7 @@ github::get_pr_files() {
 
   # 100 is the maximum page size of the API, so a shorter page is the last one
   while true; do
-    body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number/files?per_page=$per_page&page=$page")
+    body=$(github::curl -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number/files?per_page=$per_page&page=$page") || return 1
 
     # A non-array body means the request failed, so stop instead of looping forever
     if [ "$(echo "$body" | jq -r type 2>/dev/null)" != "array" ]; then
@@ -79,7 +92,8 @@ github::has_label() {
   local -r pr_number="${1}"
   local -r label_to_check="${2}"
 
-  local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/issues/$pr_number/labels")
+  local body
+  body=$(github::curl -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/issues/$pr_number/labels") || return 2
   for label in $(echo "$body" | jq -r '.[] | @base64'); do
     if [ "$(echo ${label} | base64 -d | jq -r '.name')" = "$label_to_check" ]; then
       return 0
@@ -97,14 +111,15 @@ github::add_label_to_pr() {
   local -r l_label="${6}"
   local -r xl_label="${7}"
 
-  local -r body=$(curl -sSL -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number")
+  local body
+  body=$(github::curl -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number") || return 1
   local labels=$(echo "$body" | jq .labels | jq -r ".[] | .name" | grep -w -e "$xs_label" -e "$s_label" -e "$m_label" -e "$l_label" -e "$xl_label" -v)
   labels=$(printf "%s\n%s" "$labels" "$label_to_add")
   local -r comma_separated_labels=$(github::format_labels "$labels")
 
   log::message "Final labels: $comma_separated_labels"
 
-  curl -sSL \
+  github::curl \
     -H "Authorization: token $GITHUB_TOKEN" \
     -H "$GITHUB_API_HEADER" \
     -X PUT \
@@ -132,7 +147,7 @@ github::format_labels() {
 github::comment() {
   local -r comment="$1"
 
-  curl -sSL \
+  github::curl \
     -H "Authorization: token $GITHUB_TOKEN" \
     -H "$GITHUB_API_HEADER" \
     -X POST \
