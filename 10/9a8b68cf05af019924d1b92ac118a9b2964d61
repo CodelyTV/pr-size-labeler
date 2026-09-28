@@ -1,0 +1,30 @@
+src/labeler.sh
+  s_6d4ff0c78098d1::t_b87d37b6751fe0 16-18,25-30
+  s_6d4ff0c78098d1::t_7292bfa41536cb 31-32
+  s_6d4ff0c78098d1::t_b3c61adbb3f1ee 37,41
+tests/labeler_test.sh
+  s_6d4ff0c78098d1::t_b75b3a54770c15 12-15,23,29,34,39
+  s_6d4ff0c78098d1::t_0066f79ba454db 99-133
+src/github.sh
+  s_6d4ff0c78098d1::t_39314fd219945b 5-14,25-26,34-36
+  s_6d4ff0c78098d1::t_3fbe7df5a0bc44 74,95-96,114-115,122,150
+tests/github_test.sh
+  s_6d4ff0c78098d1::t_0450f517fc2a34 17-25,98,103-116
+  s_6d4ff0c78098d1::t_75eb9eea68f785 117-119
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "109a8b68cf05af019924d1b92ac118a9b2964d61",
+  "prompts": {},
+  "sessions": {
+    "s_6d4ff0c78098d1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0e8d5-f2a0-7a50-97b9-98edfcba8f2b",
+        "model": "unknown"
+      },
+      "human_author": "Javier Ferrer González <javier.ferrer@codely.com>"
+    }
+  }
+}
