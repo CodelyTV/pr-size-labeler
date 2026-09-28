@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://json.schemastore.org/dependabot-2.0.json
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    open-pull-requests-limit: 5
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Madrid"
+    reviewers:
+      - "CodelyTV/dev"
+    # GitHub Actions does not support SemVer restrictions.
+    # https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference#:~:text=GitHub%20Actions
+    cooldown:
+      default-days: 7
+    groups:
+      # Group all GitHub Actions dependencies updates in a single PR.
+      # This avoids PR flooding and saves us GitHub Actions' execution time.
+      github-actions:
+        patterns:
+          - "*"
