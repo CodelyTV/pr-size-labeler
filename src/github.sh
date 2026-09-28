@@ -149,7 +149,7 @@ github::add_label() {
   local -r pr_number="$1"
   local -r label="$2"
   local label_json
-  label_json=$(jq -nc --arg label "$label" '{labels: [$label]}') || return 1
+  label_json=$(jq -nc --arg name "$label" '{labels: [$name]}') || return 1
 
   github::curl \
     -H "Authorization: token $GITHUB_TOKEN" \
@@ -164,7 +164,7 @@ github::remove_label() {
   local -r pr_number="$1"
   local -r label="$2"
   local encoded_label
-  encoded_label=$(jq -nr --arg label "$label" '$label | @uri') || return 1
+  encoded_label=$(jq -nr --arg name "$label" '$name | @uri') || return 1
 
   github::curl \
     -H "Authorization: token $GITHUB_TOKEN" \
