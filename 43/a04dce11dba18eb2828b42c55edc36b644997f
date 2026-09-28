@@ -1,0 +1,19 @@
+README.md
+  s_6d4ff0c78098d1::t_33efeb7f299ba4 64-67
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "43a04dce11dba18eb2828b42c55edc36b644997f",
+  "prompts": {},
+  "sessions": {
+    "s_6d4ff0c78098d1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0e8d5-f2a0-7a50-97b9-98edfcba8f2b",
+        "model": "unknown"
+      },
+      "human_author": "Javier Ferrer González <javier.ferrer@codely.com>"
+    }
+  }
+}
