@@ -1,0 +1,20 @@
+README.md
+  s_6d4ff0c78098d1::t_6eaa6f9f02c2c1 86,92-101
+  s_6d4ff0c78098d1::t_c79425b287a8c3 105
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "f8031b87d3ff45f4561533377626e0405dfc4c94",
+  "prompts": {},
+  "sessions": {
+    "s_6d4ff0c78098d1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0e8d5-f2a0-7a50-97b9-98edfcba8f2b",
+        "model": "unknown"
+      },
+      "human_author": "Javier Ferrer González <javier.ferrer@codely.com>"
+    }
+  }
+}
