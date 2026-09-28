@@ -5,13 +5,25 @@ function set_up() {
   source ./src/github.sh
 }
 
+function mock_pull_request_api() {
+  cat ./tests/fixtures/pull_request_api
+}
+
+function mock_pull_request_files_api() {
+  cat ./tests/fixtures/pull_request_files_api
+}
+
+function mock_not_found_response() {
+  echo '{"message": "Not Found"}'
+}
+
 pr_number=123
 files_to_ignore=''
 ignore_line_deletions='false'
 ignore_file_deletions='false'
 
 function test_should_count_changes() {
-  mock curl cat ./tests/fixtures/pull_request_api
+  bashunit::mock curl mock_pull_request_api
 
   assert_equals 174 "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
 }
@@ -19,7 +31,7 @@ function test_should_count_changes() {
 function test_should_count_changes_ignore_line_deletions() {
   ignore_line_deletions='true'
 
-  mock curl cat ./tests/fixtures/pull_request_api
+  bashunit::mock curl mock_pull_request_api
 
   assert_equals 173 "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
 }
@@ -29,7 +41,7 @@ function test_should_count_changes_ignore_line_deletions() {
 function test_should_count_changes_ignore_file_deletions() {
   ignore_file_deletions='true'
 
-  mock curl cat ./tests/fixtures/pull_request_files_api
+  bashunit::mock curl mock_pull_request_files_api
 
   assert_equals 2779 "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
 }
@@ -37,7 +49,7 @@ function test_should_count_changes_ignore_file_deletions() {
 function test_should_ignore_files_with_glob() {
   files_to_ignore=("*.lock" ".editorconfig")
 
-  mock curl cat ./tests/fixtures/pull_request_files_api
+  bashunit::mock curl mock_pull_request_files_api
 
   assert_equals 517 "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
 }
@@ -46,7 +58,7 @@ function test_should_ignore_files_with_glob_ignore_line_deletions() {
   files_to_ignore=("*.lock" ".editorconfig")
   ignore_line_deletions='true'
 
-  mock curl cat ./tests/fixtures/pull_request_files_api
+  bashunit::mock curl mock_pull_request_files_api
 
   assert_equals 224 "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
 }
@@ -55,7 +67,7 @@ function test_should_ignore_files_with_glob_ignore_file_deletions() {
   files_to_ignore=("*.lock" ".editorconfig")
   ignore_file_deletions='true'
 
-  mock curl cat ./tests/fixtures/pull_request_files_api
+  bashunit::mock curl mock_pull_request_files_api
 
   assert_equals 394 "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
 }
@@ -63,7 +75,7 @@ function test_should_ignore_files_with_glob_ignore_file_deletions() {
 function test_should_count_changes_across_pages() {
   ignore_file_deletions='true'
 
-  # Plain function instead of `mock`, as the response has to differ per page:
+  # Plain function instead of `bashunit::mock`, as the response has to differ per page:
   # a full page of 100 files with 2 changes each, then the fixture as last page
   function curl() {
     case "$*" in
@@ -78,7 +90,7 @@ function test_should_count_changes_across_pages() {
 function test_should_count_nothing_on_error_response() {
   ignore_file_deletions='true'
 
-  mock curl echo '{"message": "Not Found"}'
+  bashunit::mock curl mock_not_found_response
 
   assert_equals 0 "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
 }
