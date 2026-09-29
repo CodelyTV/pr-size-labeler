@@ -1,11 +1,21 @@
+# Installing PR Size Labeler? Use the README examples instead of copying this
+# repository's self-labeling workflow:
+# https://github.com/CodelyTV/pr-size-labeler/blob/main/README.md
+# This workflow checks out and runs its local action (./), so it also needs
+# contents: read. Consumers using the published action only need pull-requests: write.
 name: labeler
 
-on: [pull_request]
+# With pull_request_target, checkout uses the base repository's default branch
+# by default, so uses: ./ never runs fork code with this job's write-capable token.
+on: [pull_request_target]
 
 jobs:
   labeler:
     runs-on: ubuntu-latest
     name: Label the PR size
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./
