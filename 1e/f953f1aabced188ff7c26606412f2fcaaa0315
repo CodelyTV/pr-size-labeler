@@ -1,0 +1,43 @@
+tests/github_test.sh
+  s_6d4ff0c78098d1::t_31dfe4987a3520 48-55,60,68
+  s_6d4ff0c78098d1::t_4aa3dcbf7edb08 56-59
+  s_6d4ff0c78098d1::t_e84d73ff295984 61-63,65-67
+  s_6d4ff0c78098d1::t_e1fd71bf5eb295 69-71
+  s_e0d6fdeb728676::t_6325d791bd4e30 7,14-16,64,72-87,107-117
+src/git_askpass.sh
+  s_e0d6fdeb728676::t_c91879191d8153 1-6
+Dockerfile
+  s_e0d6fdeb728676::t_58113d07618fb5 3
+README.md
+  s_e0d6fdeb728676::t_a540a8330394ec 89-93
+action.yml
+  s_e0d6fdeb728676::t_797f94aeceb171 71-74,95
+src/labeler.sh
+  s_e0d6fdeb728676::t_33544388d057ba 14,18
+src/main.sh
+  s_e0d6fdeb728676::t_e4cff04a213141 12,36-37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "1ef953f1aabced188ff7c26606412f2fcaaa0315",
+  "prompts": {},
+  "sessions": {
+    "s_6d4ff0c78098d1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0e8d5-f2a0-7a50-97b9-98edfcba8f2b",
+        "model": "unknown"
+      },
+      "human_author": "Javier Ferrer González <javier.ferrer@codely.com>"
+    },
+    "s_e0d6fdeb728676": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0ea36-45b9-7ba0-b1b7-6886bbd207e3",
+        "model": "gpt-6-sol"
+      },
+      "human_author": "Javier Ferrer González <javier.ferrer@codely.com>"
+    }
+  }
+}
