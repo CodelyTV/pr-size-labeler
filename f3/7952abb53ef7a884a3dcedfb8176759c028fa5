@@ -1,0 +1,31 @@
+README.md
+  s_e0d6fdeb728676::t_c912d7f2da2fa6 30,71-95
+action.yml
+  s_e0d6fdeb728676::t_92a4fd31853c21 72
+src/git_askpass.sh
+  s_e0d6fdeb728676::t_a31e5342cd6d3c 3-4
+src/github.sh
+  s_e0d6fdeb728676::t_a8162cd02fce4f 27-35
+src/main.sh
+  s_e0d6fdeb728676::t_7285faaae0df7c 5
+src/whitespace.sh
+  s_e0d6fdeb728676::t_9bd52123e3bb1f 1-106
+tests/whitespace_test.sh
+  s_e0d6fdeb728676::t_ce6cd7014f74cf 1-65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "f37952abb53ef7a884a3dcedfb8176759c028fa5",
+  "prompts": {},
+  "sessions": {
+    "s_e0d6fdeb728676": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0ea36-45b9-7ba0-b1b7-6886bbd207e3",
+        "model": "unknown"
+      },
+      "human_author": "Javier Ferrer González <javier.ferrer@codely.com>"
+    }
+  }
+}
