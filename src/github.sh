@@ -17,9 +17,10 @@ github::calculate_total_modifications() {
   local -r files_to_ignore="${2}"
   local -r ignore_line_deletions="${3}"
   local -r ignore_file_deletions="${4}"
+  local -r max_modifications="${5:-}"
 
   if [ -n "$files_to_ignore" ] || [ "$ignore_file_deletions" == "true" ]; then
-    github::count_pr_file_modifications "$pr_number" "$files_to_ignore" "$ignore_line_deletions" "$ignore_file_deletions"
+    github::count_pr_file_modifications "$pr_number" "$files_to_ignore" "$ignore_line_deletions" "$ignore_file_deletions" "$max_modifications"
     return
   fi
 
@@ -42,12 +43,18 @@ github::count_pr_file_modifications() {
   local -r files_to_ignore="${2}"
   local -r ignore_line_deletions="${3}"
   local -r ignore_file_deletions="${4}"
+  local -r max_modifications="${5}"
   local -r per_page=100
   local page=1
   local body
   local additions=0
   local deletions=0
   local file filename status ignore pattern
+
+  if [ -n "$max_modifications" ] && [ "$max_modifications" -le 0 ]; then
+    echo 0
+    return 0
+  fi
 
   # 100 is the maximum page size of the API, so a shorter page is the last one
   while true; do
@@ -80,6 +87,11 @@ github::count_pr_file_modifications() {
         if [ "$ignore_line_deletions" != "true" ]; then
           ((deletions += $(jq::base64 '.deletions')))
         fi
+      fi
+
+      if [ -n "$max_modifications" ] && [ "$((additions + deletions))" -ge "$max_modifications" ]; then
+        echo $((additions + deletions))
+        return 0
       fi
     done
 

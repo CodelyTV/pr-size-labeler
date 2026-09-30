@@ -10,9 +10,15 @@ function set_up() {
   comment_message=''
   message_if_xl='Please split this PR'
   calculate_status=0
+  # Written by the mock, as the caller captures its output in a subshell
+  received_max_modifications=$(mktemp)
   label_lookup_status=0
   label_write_status=0
   comment_status=0
+}
+
+function tear_down() {
+  rm -f "$received_max_modifications"
 }
 
 function github_actions::get_pr_number() {
@@ -21,6 +27,7 @@ function github_actions::get_pr_number() {
 
 function github::calculate_total_modifications() {
   [ "$calculate_status" -eq 0 ] || return 1
+  echo "$5" > "$received_max_modifications"
   echo "$total_modifications"
 }
 
@@ -95,6 +102,15 @@ function test_should_skip_label_lookup_without_xl_message() {
 
   assert_equals 0 "$label_lookup_count"
   assert_equals 0 "$comment_count"
+}
+
+function test_should_use_largest_size_cutoff_when_sizes_are_out_of_order() {
+  total_modifications=1100
+
+  labeler::label 'size/xs' 10 'size/s' 100 'size/m' 1200 'size/l' 1000 'size/xl' false '' '' false true
+
+  assert_equals 1200 "$(cat "$received_max_modifications")"
+  assert_equals 'size/m' "$current_label"
 }
 
 function test_should_stop_when_pr_read_fails() {

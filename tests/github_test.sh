@@ -4,11 +4,15 @@ function set_up() {
   source ./src/misc.sh
   source ./src/github.sh
   label_requests=''
+  file_requests=''
 }
 
 function tear_down() {
   if [ -n "$label_requests" ]; then
     rm -f "$label_requests"
+  fi
+  if [ -n "$file_requests" ]; then
+    rm -f "$file_requests"
   fi
 }
 
@@ -109,6 +113,60 @@ function test_should_count_changes_across_pages() {
   }
 
   assert_equals $((200 + 2779)) "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions")"
+  assert_equals $((200 + 2779)) "$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions" 3000)"
+}
+
+function test_should_stop_fetching_when_xl_size_is_reached() {
+  ignore_file_deletions='true'
+  file_requests=$(mktemp)
+
+  function curl() {
+    case "$*" in
+      *"page=1") echo 1 >> "$file_requests"; jq -n '[range(100) | {filename: "file-\(.)", status: "modified", additions: 1, deletions: 1}]' ;;
+      *) echo unexpected >> "$file_requests"; return 1 ;;
+    esac
+  }
+
+  assert_equals 100 "$(github::calculate_total_modifications "$pr_number" '' false true 100)"
+  assert_equals 1 "$(cat "$file_requests")"
+}
+
+function test_should_stop_fetching_after_second_page_reaches_xl_size() {
+  file_requests=$(mktemp)
+
+  function curl() {
+    case "$*" in
+      *"page=1") echo 1 >> "$file_requests"; jq -n '[range(100) | {filename: "first-\(.)", status: "modified", additions: 1, deletions: 0}]' ;;
+      *"page=2") echo 2 >> "$file_requests"; jq -n '[range(100) | {filename: "second-\(.)", status: "modified", additions: 1, deletions: 0}]' ;;
+      *) echo unexpected >> "$file_requests"; return 1 ;;
+    esac
+  }
+
+  assert_equals 150 "$(github::calculate_total_modifications "$pr_number" '' false true 150)"
+  assert_equals $'1\n2' "$(cat "$file_requests")"
+}
+
+function test_should_skip_file_requests_when_xl_cutoff_is_zero() {
+  function curl() {
+    return 1
+  }
+
+  assert_equals 0 "$(github::calculate_total_modifications "$pr_number" '' false true 0)"
+}
+
+function test_should_fetch_next_page_when_ignored_changes_do_not_reach_xl_size() {
+  file_requests=$(mktemp)
+
+  function curl() {
+    case "$*" in
+      *"page=1") echo 1 >> "$file_requests"; jq -n '[range(100) | {filename: "ignored.lock", status: "modified", additions: 1, deletions: 1}]' ;;
+      *"page=2") echo 2 >> "$file_requests"; echo '[{"filename":"included.txt","status":"modified","additions":2,"deletions":0}]' ;;
+      *) echo unexpected >> "$file_requests"; return 1 ;;
+    esac
+  }
+
+  assert_equals 2 "$(github::calculate_total_modifications "$pr_number" '*.lock' false false 2)"
+  assert_equals $'1\n2' "$(cat "$file_requests")"
 }
 
 function test_should_report_permission_error() {
