@@ -18,22 +18,47 @@ github::calculate_total_modifications() {
   local -r ignore_line_deletions="${3}"
   local -r ignore_file_deletions="${4}"
 
-  local additions=0
+  if [ -n "$files_to_ignore" ] || [ "$ignore_file_deletions" == "true" ]; then
+    github::count_pr_file_modifications "$pr_number" "$files_to_ignore" "$ignore_line_deletions" "$ignore_file_deletions"
+    return
+  fi
+
+  local body
+  body=$(github::curl -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number") || return 1
+
+  local additions
+  additions=$(echo "$body" | jq '.additions')
   local deletions=0
 
-  if [ -z "$files_to_ignore" ] && [ "$ignore_file_deletions" != "true" ]; then
-    local body
-    body=$(github::curl -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number") || return 1
+  if [ "$ignore_line_deletions" != "true" ]; then
+    ((deletions += $(echo "$body" | jq '.deletions')))
+  fi
 
-    additions=$(echo "$body" | jq '.additions')
+  echo $((additions + deletions))
+}
 
-    if [ "$ignore_line_deletions" != "true" ]; then
-      ((deletions += $(echo "$body" | jq '.deletions')))
+github::count_pr_file_modifications() {
+  local -r pr_number="${1}"
+  local -r files_to_ignore="${2}"
+  local -r ignore_line_deletions="${3}"
+  local -r ignore_file_deletions="${4}"
+  local -r per_page=100
+  local page=1
+  local body
+  local additions=0
+  local deletions=0
+  local file filename status ignore pattern
+
+  # 100 is the maximum page size of the API, so a shorter page is the last one
+  while true; do
+    body=$(github::curl -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number/files?per_page=$per_page&page=$page") || return 1
+
+    # A non-array body means the request failed, so stop instead of looping forever
+    if [ "$(echo "$body" | jq -r type 2>/dev/null)" != "array" ]; then
+      break
     fi
-  else
-    local files
-    files=$(github::get_pr_files "$pr_number") || return 1
-    for file in $files; do
+
+    for file in $(echo "$body" | jq -r '.[] | @base64'); do
       filename=$(jq::base64 '.filename')
       status=$(jq::base64 '.status')
       ignore=false
@@ -57,28 +82,6 @@ github::calculate_total_modifications() {
         fi
       fi
     done
-  fi
-
-  echo $((additions + deletions))
-}
-
-# Prints each file of the PR as a base64 encoded JSON object, one per line
-github::get_pr_files() {
-  local -r pr_number="${1}"
-  local -r per_page=100
-  local page=1
-  local body
-
-  # 100 is the maximum page size of the API, so a shorter page is the last one
-  while true; do
-    body=$(github::curl -H "Authorization: token $GITHUB_TOKEN" -H "$GITHUB_API_HEADER" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number/files?per_page=$per_page&page=$page") || return 1
-
-    # A non-array body means the request failed, so stop instead of looping forever
-    if [ "$(echo "$body" | jq -r type 2>/dev/null)" != "array" ]; then
-      break
-    fi
-
-    echo "$body" | jq -r '.[] | @base64'
 
     if [ "$(echo "$body" | jq length)" -lt "$per_page" ]; then
       break
@@ -86,6 +89,8 @@ github::get_pr_files() {
 
     page=$((page + 1))
   done
+
+  echo $((additions + deletions))
 }
 
 github::has_label() {
