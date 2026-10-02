@@ -169,6 +169,56 @@ function test_should_fetch_next_page_when_ignored_changes_do_not_reach_xl_size()
   assert_equals $'1\n2' "$(cat "$file_requests")"
 }
 
+function test_should_fetch_next_page_when_removed_files_are_ignored() {
+  file_requests=$(mktemp)
+
+  function curl() {
+    case "$*" in
+      *"page=1") echo 1 >> "$file_requests"; jq -n '[range(100) | {filename: "removed-\(.)", status: "removed", additions: 0, deletions: 100}]' ;;
+      *"page=2") echo 2 >> "$file_requests"; echo '[{"filename":"included.txt","status":"modified","additions":2,"deletions":0}]' ;;
+      *) echo unexpected >> "$file_requests"; return 1 ;;
+    esac
+  }
+
+  assert_equals 2 "$(github::calculate_total_modifications "$pr_number" '' false true 2)"
+  assert_equals $'1\n2' "$(cat "$file_requests")"
+}
+
+function test_should_fetch_next_page_when_line_deletions_are_ignored() {
+  file_requests=$(mktemp)
+
+  function curl() {
+    case "$*" in
+      *"page=1") echo 1 >> "$file_requests"; jq -n '[range(100) | {filename: "modified-\(.)", status: "modified", additions: 0, deletions: 100}]' ;;
+      *"page=2") echo 2 >> "$file_requests"; echo '[{"filename":"included.txt","status":"modified","additions":2,"deletions":100}]' ;;
+      *) echo unexpected >> "$file_requests"; return 1 ;;
+    esac
+  }
+
+  assert_equals 2 "$(github::calculate_total_modifications "$pr_number" '*.lock' true false 2)"
+  assert_equals $'1\n2' "$(cat "$file_requests")"
+}
+
+function test_should_report_permission_error_on_later_page_below_cutoff() {
+  file_requests=$(mktemp)
+
+  function curl() {
+    case "$*" in
+      *"page=1") echo 1 >> "$file_requests"; jq -n '[range(100) | {filename: "modified-\(.)", status: "modified", additions: 1, deletions: 0}]' ;;
+      *"page=2") echo 2 >> "$file_requests"; mock_not_found_response ;;
+      *) echo unexpected >> "$file_requests"; return 1 ;;
+    esac
+  }
+
+  local output status
+  output=$(github::calculate_total_modifications "$pr_number" '' false true 1000 2>&1)
+  status=$?
+
+  assert_equals 1 "$status"
+  assert_contains 'pull-requests: write' "$output"
+  assert_equals $'1\n2' "$(cat "$file_requests")"
+}
+
 function test_should_report_permission_error() {
   ignore_file_deletions='true'
 

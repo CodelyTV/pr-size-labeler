@@ -15,6 +15,7 @@ function set_up() {
   label_lookup_status=0
   label_write_status=0
   comment_status=0
+  log_messages=()
 }
 
 function tear_down() {
@@ -49,7 +50,7 @@ function github::comment() {
 }
 
 function log::message() {
-  :
+  log_messages+=("$*")
 }
 
 function label_pr() {
@@ -111,6 +112,28 @@ function test_should_use_largest_size_cutoff_when_sizes_are_out_of_order() {
 
   assert_equals 1200 "$(cat "$received_max_modifications")"
   assert_equals 'size/m' "$current_label"
+}
+
+function test_should_log_exact_count_without_file_filtering() {
+  total_modifications=1500
+
+  label_pr
+
+  assert_equals 'Counted modifications (additions + deletions): 1500' "${log_messages[0]}"
+}
+
+function test_should_log_lower_bound_when_file_count_reaches_cutoff() {
+  labeler::label 'size/xs' 10 'size/s' 100 'size/m' 500 'size/l' 1000 'size/xl' false '' '' false true
+
+  assert_equals 'Counted at least 1000 modifications (additions + deletions), largest size cutoff reached' "${log_messages[0]}"
+}
+
+function test_should_log_exact_file_count_below_cutoff() {
+  total_modifications=999
+
+  labeler::label 'size/xs' 10 'size/s' 100 'size/m' 500 'size/l' 1000 'size/xl' false '' '*.lock' false false
+
+  assert_equals 'Counted modifications (additions + deletions): 999' "${log_messages[0]}"
 }
 
 function test_should_stop_when_pr_read_fails() {

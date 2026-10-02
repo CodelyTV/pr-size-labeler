@@ -24,8 +24,8 @@ labeler::label() {
   calculated_modifications=$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions" "$max_modifications") || return 1
   local -r total_modifications="$calculated_modifications"
 
-  if [ "$total_modifications" -ge "$max_modifications" ]; then
-    log::message "Counted at least $total_modifications modifications (additions + deletions), stopped at the largest size cutoff"
+  if [ "$total_modifications" -ge "$max_modifications" ] && [[ -n "$files_to_ignore" || "$ignore_file_deletions" == "true" ]]; then
+    log::message "Counted at least $total_modifications modifications (additions + deletions), largest size cutoff reached"
   else
     log::message "Counted modifications (additions + deletions): $total_modifications"
   fi
