@@ -11,13 +11,24 @@ labeler::label() {
   local -r files_to_ignore="${12}"
   local -r ignore_line_deletions="${13}"
   local -r ignore_file_deletions="${14}"
+  local max_modifications="${2}"
+  local max_size
+  for max_size in "${4}" "${6}" "${8}"; do
+    if [ "$max_size" -gt "$max_modifications" ]; then
+      max_modifications="$max_size"
+    fi
+  done
 
   local -r pr_number=$(github_actions::get_pr_number)
   local calculated_modifications
-  calculated_modifications=$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions") || return 1
+  calculated_modifications=$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions" "$max_modifications") || return 1
   local -r total_modifications="$calculated_modifications"
 
-  log::message "Total modifications (additions + deletions): $total_modifications"
+  if [ "$total_modifications" -ge "$max_modifications" ] && [[ -n "$files_to_ignore" || "$ignore_file_deletions" == "true" ]]; then
+    log::message "Counted at least $total_modifications modifications (additions + deletions), largest size cutoff reached"
+  else
+    log::message "Counted modifications (additions + deletions): $total_modifications"
+  fi
   log::message "Ignoring files (if present): $files_to_ignore"
 
   local -r label_to_add=$(labeler::label_for "$total_modifications" "$@")
