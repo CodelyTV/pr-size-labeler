@@ -12,6 +12,8 @@ function set_up() {
   calculate_status=0
   # Written by the mock, as the caller captures its output in a subshell
   received_max_modifications=$(mktemp)
+  received_pr_number=$(mktemp)
+  pr_number_status=0
   label_lookup_status=0
   label_write_status=0
   comment_status=0
@@ -19,10 +21,12 @@ function set_up() {
 }
 
 function tear_down() {
-  rm -f "$received_max_modifications"
+  rm -f "$received_max_modifications" "$received_pr_number"
 }
 
 function github_actions::get_pr_number() {
+  [ "$pr_number_status" -eq 0 ] || return 1
+  echo "$1" > "$received_pr_number"
   echo 123
 }
 
@@ -134,6 +138,22 @@ function test_should_log_exact_file_count_below_cutoff() {
   labeler::label 'size/xs' 10 'size/s' 100 'size/m' 500 'size/l' 1000 'size/xl' false '' '*.lock' false false
 
   assert_equals 'Counted modifications (additions + deletions): 999' "${log_messages[0]}"
+}
+
+function test_should_pass_pr_number_input() {
+  labeler::label 'size/xs' 10 'size/s' 100 'size/m' 500 'size/l' 1000 'size/xl' false '' '' false false 456
+
+  assert_equals 456 "$(cat "$received_pr_number")"
+  assert_equals 'size/xl' "$current_label"
+}
+
+function test_should_stop_when_pr_number_is_unavailable() {
+  pr_number_status=1
+
+  if label_pr >/dev/null 2>&1; then status=0; else status=$?; fi
+
+  assert_equals 1 "$status"
+  assert_equals '' "$current_label"
 }
 
 function test_should_stop_when_pr_read_fails() {

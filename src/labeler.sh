@@ -11,6 +11,7 @@ labeler::label() {
   local -r files_to_ignore="${12}"
   local -r ignore_line_deletions="${13}"
   local -r ignore_file_deletions="${14}"
+  local -r pr_number_input="${15:-}"
   local max_modifications="${2}"
   local max_size
   for max_size in "${4}" "${6}" "${8}"; do
@@ -19,7 +20,8 @@ labeler::label() {
     fi
   done
 
-  local -r pr_number=$(github_actions::get_pr_number)
+  local pr_number
+  pr_number=$(github_actions::get_pr_number "$pr_number_input") || return 1
   local calculated_modifications
   calculated_modifications=$(github::calculate_total_modifications "$pr_number" "${files_to_ignore[*]}" "$ignore_line_deletions" "$ignore_file_deletions" "$max_modifications") || return 1
   local -r total_modifications="$calculated_modifications"

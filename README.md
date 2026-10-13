@@ -86,6 +86,7 @@ The job needs `pull-requests: write` to read the PR and update its labels or pos
 | `files_to_ignore`       | No       | ''                   | Whitespace or newline separated Bash glob patterns matched against full repository-relative file paths.                  |
 | `ignore_line_deletions` | No       | 'false'              | Whether to ignore lines which are deleted when calculating the PR size. If set to 'true', deleted lines will be ignored.  |
 | `ignore_file_deletions` | No       | 'false'              | Whether to ignore completely deleted files when calculating the PR size. If set to 'true', deleted files will be ignored. Distinct from `ignore_line_deletions` in that it only ignores files which are deleted completely. If `ignore_line_deletions` is used then using `ignore_file_deletions` is redundant.            |
+| `pr_number`             | No       | ''                   | Number of the PR to label. Defaults to the PR of the event that triggered the workflow. Required for other events, such as `schedule` or `workflow_dispatch`. |
 
 ### Example for `files_to_ignore`
 
@@ -105,6 +106,29 @@ files_to_ignore: |
   "*/package-lock.json"
   "*.lock"
   "docs/*"
+```
+
+### Example for `pr_number`
+
+Workflows triggered by events other than pull requests, for example a scheduled workflow that processes open PRs, can select the PR to label with `pr_number`:
+
+```yml
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR to label'
+        required: true
+
+jobs:
+  labeler:
+    permissions:
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: codelytv/pr-size-labeler@v1
+        with:
+          pr_number: ${{ inputs.pr_number }}
 ```
 
 ## Contributing

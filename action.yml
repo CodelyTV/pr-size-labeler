@@ -68,6 +68,10 @@ inputs:
     description: 'Whether to ignore files which are deleted when calculating the PR size. If set to "true", deleted files will be ignored.'
     required: false
     default: 'false'
+  pr_number:
+    description: 'Number of the PR to label. Defaults to the PR of the event that triggered the workflow, required for other events (e.g. schedule or workflow_dispatch)'
+    required: false
+    default: ''
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -88,6 +92,7 @@ runs:
     - --files_to_ignore=${{ inputs.files_to_ignore }}
     - --ignore_line_deletions=${{ inputs.ignore_line_deletions }}
     - --ignore_file_deletions=${{ inputs.ignore_file_deletions }}
+    - --pr_number=${{ inputs.pr_number }}
 branding:
   icon: 'tag'
   color: 'green'
