@@ -1,0 +1,112 @@
+name: 'Pull Request size labeler (native)'
+description: 'Label a PR based on the amount of changes, running directly on the runner without Docker'
+inputs:
+  GITHUB_TOKEN:
+    description: 'GitHub token needed to interact with the repository'
+    required: false
+    default: ${{ github.token }}
+  xs_label:
+    description: 'Label for xs PR'
+    required: false
+    default: 'size/xs'
+  xs_max_size:
+    description: 'Max size for a PR to be considered xs'
+    required: false
+    default: '10'
+  s_label:
+    description: 'Label for s PR'
+    required: false
+    default: 'size/s'
+  s_max_size:
+    description: 'Max size for a PR to be considered s'
+    required: false
+    default: '100'
+  m_label:
+    description: 'Label for m PR'
+    required: false
+    default: 'size/m'
+  m_max_size:
+    description: 'Max size for a PR to be considered m'
+    required: false
+    default: '500'
+  l_label:
+    description: 'Label for l PR'
+    required: false
+    default: 'size/l'
+  l_max_size:
+    description: 'Max size for a PR to be considered l'
+    required: false
+    default: '1000'
+  xl_label:
+    description: 'Label for xl PR'
+    required: false
+    default: 'size/xl'
+  fail_if_xl:
+    description: 'Report GitHub Workflow failure if the PR size is xl allowing to forbid PR merge'
+    required: false
+    default: 'false'
+  message_if_xl:
+    description: 'Message to show if the PR size is xl'
+    required: false
+    default: >
+      This PR exceeds the recommended size of 1000 lines.
+      Please make sure you are NOT addressing multiple issues with one PR.
+      Note this PR might be rejected due to its size.
+  github_api_url:
+    description: 'URL to the API of your Github Server, only necessary for Github Enterprise customers'
+    required: false
+    default: '${{ github.api_url }}'
+  files_to_ignore:
+    description: 'Whitespace separated list of files to ignore when calculating the PR size (sum of changes)'
+    required: false
+    default: ''
+  ignore_line_deletions:
+    description: 'Whether to ignore lines which are deleted when calculating the PR size. If set to "true", deleted lines will be ignored.'
+    required: false
+    default: 'false'
+  ignore_file_deletions:
+    description: 'Whether to ignore files which are deleted when calculating the PR size. If set to "true", deleted files will be ignored.'
+    required: false
+    default: 'false'
+runs:
+  using: 'composite'
+  steps:
+    # Inputs are passed through env so their values are never expanded into the script
+    - shell: bash
+      env:
+        INPUT_GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        INPUT_XS_LABEL: ${{ inputs.xs_label }}
+        INPUT_XS_MAX_SIZE: ${{ inputs.xs_max_size }}
+        INPUT_S_LABEL: ${{ inputs.s_label }}
+        INPUT_S_MAX_SIZE: ${{ inputs.s_max_size }}
+        INPUT_M_LABEL: ${{ inputs.m_label }}
+        INPUT_M_MAX_SIZE: ${{ inputs.m_max_size }}
+        INPUT_L_LABEL: ${{ inputs.l_label }}
+        INPUT_L_MAX_SIZE: ${{ inputs.l_max_size }}
+        INPUT_XL_LABEL: ${{ inputs.xl_label }}
+        INPUT_FAIL_IF_XL: ${{ inputs.fail_if_xl }}
+        INPUT_MESSAGE_IF_XL: ${{ inputs.message_if_xl }}
+        INPUT_GITHUB_API_URL: ${{ inputs.github_api_url }}
+        INPUT_FILES_TO_IGNORE: ${{ inputs.files_to_ignore }}
+        INPUT_IGNORE_LINE_DELETIONS: ${{ inputs.ignore_line_deletions }}
+        INPUT_IGNORE_FILE_DELETIONS: ${{ inputs.ignore_file_deletions }}
+      # Same arguments as the Docker action in ../action.yml, including the literal
+      # quotes around message_if_xl, so entrypoint.sh sanitizes them the same way
+      run: |
+        "$GITHUB_ACTION_PATH/../entrypoint.sh" \
+          "--github_token=$INPUT_GITHUB_TOKEN" \
+          "--github_api_url=$INPUT_GITHUB_API_URL" \
+          "--xs_label=$INPUT_XS_LABEL" \
+          "--xs_max_size=$INPUT_XS_MAX_SIZE" \
+          "--s_label=$INPUT_S_LABEL" \
+          "--s_max_size=$INPUT_S_MAX_SIZE" \
+          "--m_label=$INPUT_M_LABEL" \
+          "--m_max_size=$INPUT_M_MAX_SIZE" \
+          "--l_label=$INPUT_L_LABEL" \
+          "--l_max_size=$INPUT_L_MAX_SIZE" \
+          "--xl_label=$INPUT_XL_LABEL" \
+          "--fail_if_xl=$INPUT_FAIL_IF_XL" \
+          "--message_if_xl=\"$INPUT_MESSAGE_IF_XL\"" \
+          "--files_to_ignore=$INPUT_FILES_TO_IGNORE" \
+          "--ignore_line_deletions=$INPUT_IGNORE_LINE_DELETIONS" \
+          "--ignore_file_deletions=$INPUT_IGNORE_FILE_DELETIONS"

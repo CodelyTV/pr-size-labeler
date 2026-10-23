@@ -17,3 +17,15 @@ jobs:
 
       - name: "Tests"
         run: ./lib/bashunit
+
+  tests-native:
+    name: "Run tests (native)"
+    runs-on: 'ubuntu-slim'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: "Install dependencies"
+        run: ./install-dependencies.sh
+
+      - name: "Tests"
+        run: ./lib/bashunit

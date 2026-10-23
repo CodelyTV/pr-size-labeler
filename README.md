@@ -66,6 +66,19 @@ The job needs `pull-requests: write` to read the PR and update its labels or pos
 > [!TIP]
 > Replace `on: [pull_request]` with `on: [pull_request_target]` when using forks and when you don't want any PR to be able to execute code ([more info: GitHub docs](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target)).
 
+### Running without Docker
+
+The action above runs in a Docker container, which needs a Linux runner with Docker. On runners without Docker,
+such as `ubuntu-slim`, use the `native` variant instead. It takes the same arguments and runs directly on the runner:
+
+```yml
+    runs-on: ubuntu-slim
+    steps:
+      - uses: codelytv/pr-size-labeler/native@v1
+```
+
+The `native` variant needs `bash`, `curl` and `jq` on the runner. GitHub-hosted Ubuntu runners include them.
+
 ## 🎛️ Arguments
 
 | Name                    | Required | Default Value        | Description                                                                                                               |
