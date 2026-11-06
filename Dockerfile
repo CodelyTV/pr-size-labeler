@@ -1,4 +1,4 @@
-FROM alpine:3.15
+FROM alpine:3.15@sha256:19b4bcc4f60e99dd5ebdca0cbce22c503bbcff197549d7e19dab4f22254dc864
 
 RUN apk add --no-cache bash curl jq wget
 RUN mkdir -p "$HOME/bin" && \
